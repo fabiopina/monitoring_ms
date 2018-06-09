@@ -1,0 +1,27 @@
+server:
+  port: 4000
+
+spring:
+  application:
+    name: zuul-gateway
+
+zuul:
+  sensitive-headers:
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA:10.0.2.15:8761}/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+# Increase the Hystrix timeout to 60s (for all)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

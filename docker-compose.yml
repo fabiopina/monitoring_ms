@@ -1,0 +1,92 @@
+version: "3"
+services:
+  eureka:
+    image: fabiopina151/microservices:eureka-server
+    expose:
+      - "8761"
+  zuul:
+    image: fabiopina151/microservices:zuul-gateway
+    expose:
+      - "4000"
+    ports:
+      - "8080:4000"
+    links:
+      - eureka
+    environment:
+      - LOGSERVERADDRESS=log-server:4040
+      - EUREKA=eureka:8761
+  log-server:
+    image: fabiopina151/microservices:log-server
+    expose:
+      - "4040"
+    links:
+      - zuul
+    environment:
+      - DATABASEADDRESS=192.168.1.32
+  ms-db:
+    image: mariadb
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ribeiro
+  users:
+    image: fabiopina151/microservices:users-ms
+    expose:
+      - "5000"
+    links:
+      - ms-db
+      - eureka
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+      - EUREKA_SERVICE_URL=eureka:8761
+      - EUREKA_INSTANCE_PORT=5000
+  songs:
+    image: fabiopina151/microservices:songs-ms
+    expose:
+      - "5001"
+    links:
+      - ms-db
+      - eureka
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+      - EUREKA_SERVICE_URL=eureka:8761
+      - EUREKA_INSTANCE_PORT=5001
+  playlists:
+    image: fabiopina151/microservices:playlists-ms
+    expose:
+      - "5002"
+    links:
+      - ms-db
+      - zuul
+      - eureka
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+      - SONGSADDRESS=zuul:4000/songs-ms
+      - EUREKA_SERVICE_URL=eureka:8761
+      - EUREKA_INSTANCE_PORT=5002
+  auth:
+    image: fabiopina151/microservices:auth-ms
+    expose:
+      - "5003"
+    links:
+      - eureka
+      - zuul
+    environment:
+      - USERSADDRESS=zuul:4000/users-ms
+      - EUREKA_SERVICE_URL=eureka:8761
+      - EUREKA_INSTANCE_PORT=5003
+  aggr:
+    image: fabiopina151/microservices:aggr-ms
+    expose:
+      - "5004"
+    links:
+      - eureka
+      - zuul
+    environment:
+      - USERSADDRESS=zuul:4000/users-ms
+      - PLAYLISTSADDRESS=zuul:4000/playlists-ms
+      - SONGSADDRESS=zuul:4000/songs-ms
+      - AUTHADDRESS=zuul:4000/auth-ms
+      - EUREKA_SERVICE_URL=eureka:8761
+      - EUREKA_INSTANCE_PORT=5004
+
