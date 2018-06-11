@@ -1,13 +1,13 @@
 package hello;
 
-import hello.http.RequestQueue;
+import hello.queue.RequestQueue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
-import hello.filters.pre.LogIncomingRequest;
-import hello.filters.post.LogLeavingRequest;
+import hello.filters.pre.TimeTrackerFilter;
+import hello.filters.post.InfoRequestFilter;
 
 @EnableZuulProxy
 @EnableDiscoveryClient
@@ -21,13 +21,13 @@ public class GatewayApplication {
   }
 
   @Bean
-  public LogIncomingRequest logIncomingRequest() {
-    return new LogIncomingRequest(q);
+  public TimeTrackerFilter TimeTrackerFilter() {
+    return new TimeTrackerFilter();
   }
 
   @Bean
-  public LogLeavingRequest logLeavingRequest() {
-    return new LogLeavingRequest(q);
+  public InfoRequestFilter InfoRequestFilter() {
+    return new InfoRequestFilter(q);
   }
 
 }
