@@ -44,10 +44,11 @@ public class RequestQueue {
         String timeEnd = ctx.getZuulRequestHeaders().get("time-end");
         String sourceIp = request.getRemoteAddr();
         int sourcePort = request.getRemotePort();
-        String destinyMicroservice = ctx.getZuulRequestHeaders().get("x-forwarded-prefix").substring(1);
+        String path = request.getRequestURL().toString().split("/")[3] + "/";
+        String destinyMicroservice = path.split("/")[0];
         String destinyInstance = ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7);
         String destinyIp = null;
-        String destinyFunction = request.getMethod() + " -> " + request.getRequestURL().toString().split("/")[3];
+        String destinyFunction = request.getMethod() + " -> " + path;
 
         try{
             InetAddress addr = InetAddress.getByName(destinyInstance.split(":")[0]);
