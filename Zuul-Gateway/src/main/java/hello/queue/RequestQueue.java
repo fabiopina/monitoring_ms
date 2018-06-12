@@ -5,6 +5,8 @@ import com.netflix.zuul.context.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -47,18 +49,29 @@ public class RequestQueue {
         String path = request.getRequestURL().toString().split("/")[3] + "/";
         String destinyMicroservice = path.split("/")[0];
         String destinyInstance = ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7);
-        String destinyIp = null;
         String destinyFunction = request.getMethod() + " -> " + path;
 
+        String destinyIp = null;
+        long diff = 0;
+
         try{
+            // Get IP given instance name
             InetAddress addr = InetAddress.getByName(destinyInstance.split(":")[0]);
             destinyIp = addr.getHostAddress();
+
+            // Get diference between 2 timestamps
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date startParsedDate = dateFormat.parse(timeStart);
+            Date endParsedDate = dateFormat.parse(timeEnd);
+            diff = endParsedDate.getTime() - startParsedDate.getTime();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
         System.out.println(timeStart);
         System.out.println(timeEnd);
+        System.out.println(diff);
         System.out.println(sourceIp);
         System.out.println(sourcePort);
         System.out.println(destinyMicroservice);
