@@ -35,7 +35,7 @@ public class TimeTrackerFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        ctx.addZuulRequestHeader("time-start", timestamp.toString());
+        ctx.addZuulRequestHeader("time-start", "" + timestamp.getTime());
 
         return null;
     }

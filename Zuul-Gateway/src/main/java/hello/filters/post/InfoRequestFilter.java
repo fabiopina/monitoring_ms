@@ -41,7 +41,7 @@ public class InfoRequestFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        ctx.addZuulRequestHeader("time-end", timestamp.toString());
+        ctx.addZuulRequestHeader("time-end", "" + timestamp.getTime());
         queue.add(ctx);
 
         return null;

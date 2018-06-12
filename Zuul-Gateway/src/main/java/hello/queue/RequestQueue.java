@@ -58,23 +58,20 @@ public class RequestQueue {
         String destinyInstance = ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7);
         String destinyFunction = request.getMethod() + " -> " + path;
 
+        long tStart = Long.parseLong(timeStart);
+        long tEnd = Long.parseLong(timeEnd);
+
         String destinyIp = null;
-        long diff = 0;
 
         try{
             // Get IP given instance name
             InetAddress addr = InetAddress.getByName(destinyInstance.split(":")[0]);
             destinyIp = addr.getHostAddress();
-
-            // Get diference between 2 timestamps
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-            Date startParsedDate = dateFormat.parse(timeStart);
-            Date endParsedDate = dateFormat.parse(timeEnd);
-            diff = endParsedDate.getTime() - startParsedDate.getTime();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        db.addEntry(conn, timeStart, timeEnd, ""+diff, sourceIp, ""+sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
+
+        db.addEntry(conn, tStart, tEnd, tEnd - tStart, sourceIp, sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
     }
 }

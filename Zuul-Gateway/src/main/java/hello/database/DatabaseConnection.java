@@ -44,9 +44,9 @@ public class DatabaseConnection {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS logs(" +
                     "id INT NOT NULL AUTO_INCREMENT," +
-                    "start_time VARCHAR(255)," +
-                    "end_time VARCHAR(255)," +
-                    "request_time_milliseconds INT," +
+                    "start_time BIGINT," +
+                    "end_time BIGINT," +
+                    "request_time_milliseconds BIGINT," +
                     "source_ip VARCHAR(255)," +
                     "source_port INT," +
                     "destiny_microservice VARCHAR(255)," +
@@ -60,15 +60,15 @@ public class DatabaseConnection {
 
     }
 
-    public void addEntry(Connection conn, String start, String end, String time, String s_ip, String s_port, String d_micro, String d_insta, String d_ip, String d_func) {
+    public void addEntry(Connection conn, long start, long end, long time, String s_ip, int s_port, String d_micro, String d_insta, String d_ip, String d_func) {
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("INSERT INTO logs (start_time, end_time, request_time_milliseconds, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
-                    " VALUES ('"+ start + "'" +
-                    ", '" + end + "'" +
-                    ", '" + time + "'" +
+                    " VALUES ("+ start +
+                    ", " + end + "" +
+                    ", " + time + "" +
                     ", '" + s_ip + "'" +
-                    ", '" + s_port + "'" +
+                    ", " + s_port + "" +
                     ", '" + d_micro + "'" +
                     ", '" + d_insta + "'" +
                     ", '" + d_ip + "'" +
