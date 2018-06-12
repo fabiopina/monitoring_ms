@@ -1,11 +1,11 @@
 version: "3"
 services:
   eureka:
-    image: fabiopina151/microservices:eureka-server
+    image: fabiopina151/eureka-server:0.1
     expose:
       - "8761"
   zuul:
-    image: fabiopina151/microservices:zuul-gateway
+    image: fabiopina151/zuul-gateway:0.1
     expose:
       - "4000"
     ports:
@@ -15,13 +15,6 @@ services:
     environment:
       - LOGSERVERADDRESS=log-server:4040
       - EUREKA=eureka:8761
-  log-server:
-    image: fabiopina151/microservices:log-server
-    expose:
-      - "4040"
-    links:
-      - zuul
-    environment:
       - DATABASEADDRESS=192.168.1.32
   ms-db:
     image: mariadb
