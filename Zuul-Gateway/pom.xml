@@ -38,6 +38,16 @@
       <artifactId>spring-cloud-starter-eureka</artifactId>
       <version>1.4.4.RELEASE</version>
     </dependency>
+    <dependency>
+      <groupId>org.ini4j</groupId>
+      <artifactId>ini4j</artifactId>
+      <version>0.5.1</version>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.11</version>
+    </dependency>
   </dependencies>
   
   <dependencyManagement>

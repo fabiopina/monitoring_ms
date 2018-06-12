@@ -2,6 +2,7 @@ package hello.queue;
 
 import com.netflix.client.IResponse;
 import com.netflix.zuul.context.RequestContext;
+import hello.database.DatabaseConnection;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -12,9 +13,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class RequestQueue {
     BlockingQueue<RequestContext> requestQueue;
+    DatabaseConnection db;
 
     public RequestQueue() {
         requestQueue = new LinkedBlockingDeque<>();
+        db = new DatabaseConnection();
     }
 
     public void add(RequestContext element) {
@@ -68,16 +71,7 @@ public class RequestQueue {
             e.printStackTrace();
         }
 
-
-        System.out.println(timeStart);
-        System.out.println(timeEnd);
-        System.out.println(diff);
-        System.out.println(sourceIp);
-        System.out.println(sourcePort);
-        System.out.println(destinyMicroservice);
-        System.out.println(destinyInstance);
-        System.out.println(destinyIp);
-        System.out.println(destinyFunction);
+        db.addEntry(timeStart, timeEnd, ""+diff, sourceIp, ""+sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
     }
-
+    
 }
