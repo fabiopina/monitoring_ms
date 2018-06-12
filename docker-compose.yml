@@ -44,7 +44,7 @@ services:
       - EUREKA_SERVICE_URL=eureka:8761
       - EUREKA_INSTANCE_PORT=5001
   playlists:
-    image: fabiopina151/playlists-ms:0.1 .
+    image: fabiopina151/playlists-ms:0.1
     expose:
       - "5002"
     links:
@@ -57,7 +57,7 @@ services:
       - EUREKA_SERVICE_URL=eureka:8761
       - EUREKA_INSTANCE_PORT=5002
   auth:
-    image: fabiopina151/auth-ms:0.1 .
+    image: fabiopina151/auth-ms:0.1
     expose:
       - "5003"
     links:
