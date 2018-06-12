@@ -11,9 +11,11 @@ import java.sql.Statement;
 
 public class DatabaseConnection {
     private Ini ini = null;
-    private Connection conn = null;
 
-    public DatabaseConnection() {
+    public DatabaseConnection() { }
+
+    public Connection connect() {
+        Connection conn = null;
         try {
             ini = new Ini(new File("config.ini"));
         } catch (Exception e) {
@@ -34,10 +36,10 @@ public class DatabaseConnection {
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
-        createTable();
+        return conn;
     }
 
-    public void createTable() {
+    public void createTable(Connection conn) {
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS logs(" +
@@ -58,19 +60,19 @@ public class DatabaseConnection {
 
     }
 
-    public void addEntry(String start, String end, String time, String s_ip, String s_port, String d_micro, String d_insta, String d_ip, String d_func) {
+    public void addEntry(Connection conn, String start, String end, String time, String s_ip, String s_port, String d_micro, String d_insta, String d_ip, String d_func) {
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("INSERT INTO logs (start_time, end_time, request_time_milliseconds, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
-                    "VALUES ("+ start +
-                    "," + end +
-                    "," + time +
-                    "," + s_ip +
-                    "," + s_port +
-                    "," + d_micro +
-                    "," + d_insta +
-                    "," + d_ip +
-                    "," + d_func + ")");
+                    " VALUES ('"+ start + "'" +
+                    ", '" + end + "'" +
+                    ", '" + time + "'" +
+                    ", '" + s_ip + "'" +
+                    ", '" + s_port + "'" +
+                    ", '" + d_micro + "'" +
+                    ", '" + d_insta + "'" +
+                    ", '" + d_ip + "'" +
+                    ", '" + d_func + "')");
         } catch (Exception e) {
             e.printStackTrace();
         }

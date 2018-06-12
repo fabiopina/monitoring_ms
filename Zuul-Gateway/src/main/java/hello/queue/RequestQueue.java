@@ -6,6 +6,7 @@ import hello.database.DatabaseConnection;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
@@ -14,10 +15,13 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class RequestQueue {
     BlockingQueue<RequestContext> requestQueue;
     DatabaseConnection db;
+    Connection conn;
 
     public RequestQueue() {
         requestQueue = new LinkedBlockingDeque<>();
         db = new DatabaseConnection();
+        conn = db.connect();
+        db.createTable(conn);
     }
 
     public void add(RequestContext element) {
@@ -71,7 +75,6 @@ public class RequestQueue {
             e.printStackTrace();
         }
 
-        db.addEntry(timeStart, timeEnd, ""+diff, sourceIp, ""+sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
+        db.addEntry(conn, timeStart, timeEnd, ""+diff, sourceIp, ""+sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
     }
-    
 }
