@@ -10,12 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseConnection {
-    private Ini ini = null;
 
     public DatabaseConnection() { }
 
     public Connection connect() {
         Connection conn = null;
+        Ini ini = null;
         try {
             ini = new Ini(new File("config.ini"));
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class DatabaseConnection {
     public void createTable(Connection conn) {
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS logs(" +
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("TABLE") + "(" +
                     "id INT NOT NULL AUTO_INCREMENT," +
                     "start_time BIGINT," +
                     "end_time BIGINT," +
@@ -63,7 +63,7 @@ public class DatabaseConnection {
     public void addEntry(Connection conn, long start, long end, long time, String s_ip, int s_port, String d_micro, String d_insta, String d_ip, String d_func) {
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO logs (start_time, end_time, request_time_milliseconds, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
+            stmt.executeUpdate("INSERT INTO " + System.getenv("TABLE") + " (start_time, end_time, request_time_milliseconds, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
                     " VALUES ("+ start +
                     ", " + end + "" +
                     ", " + time + "" +
