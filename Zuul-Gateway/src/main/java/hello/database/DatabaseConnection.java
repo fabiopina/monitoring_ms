@@ -42,7 +42,7 @@ public class DatabaseConnection {
     public void createTable(Connection conn) {
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("TABLE") + "(" +
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("TABLE") + " (" +
                     "id INT NOT NULL AUTO_INCREMENT," +
                     "start_time BIGINT," +
                     "end_time BIGINT," +

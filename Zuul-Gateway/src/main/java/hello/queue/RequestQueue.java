@@ -49,17 +49,28 @@ public class RequestQueue {
     public void processRequest(RequestContext ctx) {
         HttpServletRequest request = ctx.getRequest();
 
-        String timeStart = ctx.getZuulRequestHeaders().get("time-start");
+        System.out.println("HERE!!!!!");
+        System.out.println(request.getRequestURL().toString());
+
+        /*String timeStart = ctx.getZuulRequestHeaders().get("time-start");
         String timeEnd = ctx.getZuulRequestHeaders().get("time-end");
         String sourceIp = request.getRemoteAddr();
         int sourcePort = request.getRemotePort();
-        String path = request.getRequestURL().toString().split("/")[3] + "/";
-        String destinyMicroservice = path.split("/")[0];
-        String destinyInstance = ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7);
+        String destinyMicroservice = request.getRequestURL().toString().split("/")[3];
+        String instance = ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7);
+        String destinyInstance = instance.split("/")[0];
+        String path = null;
+        if(instance.indexOf('/') == -1) {
+            path = "/";
+        }
+        else {
+            path = instance.substring(instance.indexOf("/")+1).trim();
+        }
         String destinyFunction = request.getMethod() + " -> " + path;
 
         long tStart = Long.parseLong(timeStart);
         long tEnd = Long.parseLong(timeEnd);
+
 
         String destinyIp = null;
 
@@ -72,6 +83,6 @@ public class RequestQueue {
         }
 
 
-        db.addEntry(conn, tStart, tEnd, tEnd - tStart, sourceIp, sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
+        db.addEntry(conn, tStart, tEnd, tEnd - tStart, sourceIp, sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);*/
     }
 }
