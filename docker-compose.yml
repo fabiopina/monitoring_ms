@@ -15,6 +15,7 @@ services:
     environment:
       - EUREKA=eureka:8761
       - DATABASEADDRESS=192.168.1.32
+      - TABLE=teste
   ms-db:
     image: mariadb
     expose:
