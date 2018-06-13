@@ -1,13 +1,15 @@
 package hello.filters.post;
 
+import com.netflix.client.IResponse;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.ZuulFilter;
 
+import hello.queue.CtxInfoObject;
 import hello.queue.RequestQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Timestamp;
+import javax.servlet.http.HttpServletRequest;
 
 public class InfoRequestFilter extends ZuulFilter {
     private RequestQueue queue;
@@ -39,10 +41,13 @@ public class InfoRequestFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        HttpServletRequest request = ctx.getRequest();
 
-        ctx.addZuulRequestHeader("time-end", "" + timestamp.getTime());
-        queue.add(ctx);
+        long timeEnd = System.currentTimeMillis();
+
+        CtxInfoObject c = CtxInfoObject.constructObjectFromCtx(Long.parseLong(ctx.getZuulRequestHeaders().get("time-start")), timeEnd, request.getRemoteAddr(), request.getMethod(), request.getRequestURL().toString(), ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7), request.getRemotePort());
+
+        queue.add(c);
 
         return null;
     }

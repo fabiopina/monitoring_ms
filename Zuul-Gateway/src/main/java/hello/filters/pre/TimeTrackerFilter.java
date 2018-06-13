@@ -6,8 +6,6 @@ import com.netflix.zuul.ZuulFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Timestamp;
-
 public class TimeTrackerFilter extends ZuulFilter {
     private static Logger log = LoggerFactory.getLogger(TimeTrackerFilter.class);
 
@@ -33,9 +31,8 @@ public class TimeTrackerFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        ctx.addZuulRequestHeader("time-start", "" + timestamp.getTime());
+        ctx.addZuulRequestHeader("time-start", "" + System.currentTimeMillis());
 
         return null;
     }

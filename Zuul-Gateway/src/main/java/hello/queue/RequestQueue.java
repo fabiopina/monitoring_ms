@@ -1,19 +1,14 @@
 package hello.queue;
 
-import com.netflix.client.IResponse;
-import com.netflix.zuul.context.RequestContext;
 import hello.database.DatabaseConnection;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class RequestQueue {
-    BlockingQueue<RequestContext> requestQueue;
+    BlockingQueue<CtxInfoObject> requestQueue;
     DatabaseConnection db;
     Connection conn;
 
@@ -24,7 +19,7 @@ public class RequestQueue {
         db.createTable(conn);
     }
 
-    public void add(RequestContext element) {
+    public void add(CtxInfoObject element) {
         requestQueue.add(element);
     }
 
@@ -32,48 +27,33 @@ public class RequestQueue {
         Thread thread = new Thread(new Runnable() {
             public void run()
             {
-                try{
-                    while (true) {
-                        RequestContext element = requestQueue.take();
+                while (true) {
+                    try{
+                        CtxInfoObject element = requestQueue.take();
                         processRequest(element);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
                 }
-
-
             }});
         thread.start();
     }
 
-    public void processRequest(RequestContext ctx) {
-        HttpServletRequest request = ctx.getRequest();
+    public void processRequest(CtxInfoObject c) {
 
-        System.out.println("HERE!!!!!");
-        System.out.println(request.getRequestURL().toString());
+        String destinyMicroservice = c.getRequestURL().split("/")[3];
+        String destinyInstance = c.getInstance().split("/")[0];
 
-        /*String timeStart = ctx.getZuulRequestHeaders().get("time-start");
-        String timeEnd = ctx.getZuulRequestHeaders().get("time-end");
-        String sourceIp = request.getRemoteAddr();
-        int sourcePort = request.getRemotePort();
-        String destinyMicroservice = request.getRequestURL().toString().split("/")[3];
-        String instance = ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7);
-        String destinyInstance = instance.split("/")[0];
         String path = null;
-        if(instance.indexOf('/') == -1) {
+        if(c.getInstance().indexOf('/') == -1) {
             path = "/";
         }
         else {
-            path = instance.substring(instance.indexOf("/")+1).trim();
+            path = c.getInstance().substring(c.getInstance().indexOf("/")+1).trim();
         }
-        String destinyFunction = request.getMethod() + " -> " + path;
-
-        long tStart = Long.parseLong(timeStart);
-        long tEnd = Long.parseLong(timeEnd);
-
+        String destinyFunction = c.getMethod() + " -> " + path;
 
         String destinyIp = null;
-
         try{
             // Get IP given instance name
             InetAddress addr = InetAddress.getByName(destinyInstance.split(":")[0]);
@@ -83,6 +63,6 @@ public class RequestQueue {
         }
 
 
-        db.addEntry(conn, tStart, tEnd, tEnd - tStart, sourceIp, sourcePort, destinyMicroservice, destinyInstance, destinyIp, destinyFunction);*/
+        db.addEntry(conn, c.getStartTime(), c.getEndTime(), c.getEndTime() - c.getStartTime(), c.getRemoteAddr(), c.getRemotePort(), destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
     }
 }
