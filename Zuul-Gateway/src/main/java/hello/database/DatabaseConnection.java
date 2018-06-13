@@ -6,15 +6,14 @@ import org.ini4j.IniPreferences;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseConnection {
+    private Connection conn = null;
 
-    public DatabaseConnection() { }
+    public Connection getConnection() {
+        if (conn != null) return conn;
 
-    public Connection connect() {
-        Connection conn = null;
         Ini ini = null;
         try {
             ini = new Ini(new File("config.ini"));
@@ -27,21 +26,22 @@ public class DatabaseConnection {
         String database = prefs.node("MySQL").get("database", null);
         String host = System.getenv("DATABASEADDRESS");
 
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?serverTimezone=UTC&" + "user=" + user + "&password=" + password);
+        return getConnection(host, database, user, password);
+    }
 
-        } catch (SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+    public Connection getConnection(String host, String db, String user, String pass){
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/" + db + "?serverTimezone=UTC&" + "user=" + user + "&password=" + pass);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return conn;
     }
 
-    public void createTable(Connection conn) {
+    public void createTable() {
         try {
-            Statement stmt = conn.createStatement();
+            Statement stmt = getConnection().createStatement();
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("TABLE") + " (" +
                     "id INT NOT NULL AUTO_INCREMENT," +
                     "start_time BIGINT," +
@@ -57,12 +57,11 @@ public class DatabaseConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public void addEntry(Connection conn, long start, long end, long time, String s_ip, int s_port, String d_micro, String d_insta, String d_ip, String d_func) {
+    public void addEntry(long start, long end, long time, String s_ip, int s_port, String d_micro, String d_insta, String d_ip, String d_func) {
         try {
-            Statement stmt = conn.createStatement();
+            Statement stmt = getConnection().createStatement();
             stmt.executeUpdate("INSERT INTO " + System.getenv("TABLE") + " (start_time, end_time, request_time_milliseconds, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
                     " VALUES ("+ start +
                     ", " + end + "" +

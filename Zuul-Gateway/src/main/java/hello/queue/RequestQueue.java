@@ -3,20 +3,17 @@ package hello.queue;
 import hello.database.DatabaseConnection;
 
 import java.net.InetAddress;
-import java.sql.Connection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class RequestQueue {
     BlockingQueue<CtxInfoObject> requestQueue;
     DatabaseConnection db;
-    Connection conn;
 
     public RequestQueue() {
         requestQueue = new LinkedBlockingDeque<>();
         db = new DatabaseConnection();
-        conn = db.connect();
-        db.createTable(conn);
+        db.createTable();
     }
 
     public void add(CtxInfoObject element) {
@@ -63,6 +60,6 @@ public class RequestQueue {
         }
 
 
-        db.addEntry(conn, c.getStartTime(), c.getEndTime(), c.getEndTime() - c.getStartTime(), c.getRemoteAddr(), c.getRemotePort(), destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
+        db.addEntry(c.getStartTime(), c.getEndTime(), c.getEndTime() - c.getStartTime(), c.getRemoteAddr(), c.getRemotePort(), destinyMicroservice, destinyInstance, destinyIp, destinyFunction);
     }
 }
