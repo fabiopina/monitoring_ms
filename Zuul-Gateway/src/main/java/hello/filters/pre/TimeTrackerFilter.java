@@ -3,11 +3,7 @@ package hello.filters.pre;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.ZuulFilter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TimeTrackerFilter extends ZuulFilter {
-    private static Logger log = LoggerFactory.getLogger(TimeTrackerFilter.class);
 
     // returns a String that stands for the type of the filter---in this case, pre, or it could be route for a routing filter.
     @Override

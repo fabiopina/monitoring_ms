@@ -1,0 +1,5 @@
+docker/DockerConnection.class
+docker/DockerConnection$1.class
+eureka/Eureka.class
+eureka/EurekaClient.class
+Registrator.class

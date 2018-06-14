@@ -6,14 +6,11 @@ import com.netflix.zuul.ZuulFilter;
 
 import hello.queue.CtxInfoObject;
 import hello.queue.RequestQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class InfoRequestFilter extends ZuulFilter {
     private RequestQueue queue;
-    private static Logger log = LoggerFactory.getLogger(InfoRequestFilter.class);
 
     public InfoRequestFilter(RequestQueue q) {
         queue = q;

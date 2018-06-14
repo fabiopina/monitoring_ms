@@ -16,6 +16,16 @@ services:
       - EUREKA=eureka:8761
       - DATABASEADDRESS=192.168.1.32
       - TABLE=teste
+  registrator:
+    image: fabiopina151/registrator:0.1
+    links:
+      - eureka
+    environment:
+      - EUREKA=eureka:8761
+      - SERVICEPATH=app
+      - HEARTBEATINTERVAL=30
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   ms-db:
     image: mariadb
     expose:
@@ -23,61 +33,56 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=ribeiro
   users:
-    image: fabiopina151/users-ms:0.1
+    image: fabiopina151/registerwitheureka_users-ms:0.1
     expose:
       - "5000"
     links:
       - ms-db
-      - eureka
     environment:
       - DATABASEADDRESS=ms-db:3306
-      - EUREKA_SERVICE_URL=eureka:8761
-      - EUREKA_INSTANCE_PORT=5000
+    depends_on:
+      - registrator  
   songs:
-    image: fabiopina151/songs-ms:0.1
+    image: fabiopina151/registerwitheureka_songs-ms:0.1
     expose:
       - "5001"
     links:
       - ms-db
-      - eureka
     environment:
       - DATABASEADDRESS=ms-db:3306
-      - EUREKA_SERVICE_URL=eureka:8761
-      - EUREKA_INSTANCE_PORT=5001
+    depends_on:
+      - registrator 
   playlists:
-    image: fabiopina151/playlists-ms:0.1
+    image: fabiopina151/registerwitheureka_playlists-ms:0.1
     expose:
       - "5002"
     links:
       - ms-db
       - zuul
-      - eureka
     environment:
       - DATABASEADDRESS=ms-db:3306
       - SONGSADDRESS=zuul:4000/songs-ms
-      - EUREKA_SERVICE_URL=eureka:8761
-      - EUREKA_INSTANCE_PORT=5002
+    depends_on:
+      - registrator 
   auth:
-    image: fabiopina151/auth-ms:0.1
+    image: fabiopina151/registerwitheureka_auth-ms:0.1
     expose:
       - "5003"
     links:
-      - eureka
       - zuul
     environment:
       - USERSADDRESS=zuul:4000/users-ms
-      - EUREKA_SERVICE_URL=eureka:8761
-      - EUREKA_INSTANCE_PORT=5003
+    depends_on:
+      - registrator 
   aggr:
-    image: fabiopina151/aggr-ms:0.1
+    image: fabiopina151/registerwitheureka_aggr-ms:0.1
     expose:
       - "5004"
     links:
-      - eureka
       - zuul
     environment:
       - PLAYLISTSADDRESS=zuul:4000/playlists-ms
       - SONGSADDRESS=zuul:4000/songs-ms
-      - EUREKA_SERVICE_URL=eureka:8761
-      - EUREKA_INSTANCE_PORT=5004
+    depends_on:
+      - registrator 
 
