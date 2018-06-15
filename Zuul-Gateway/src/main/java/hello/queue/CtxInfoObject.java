@@ -5,8 +5,6 @@ public class CtxInfoObject {
     private int remotePort;
     private long startTime, endTime;
 
-    public CtxInfoObject() {}
-
     public static CtxInfoObject constructObjectFromCtx(long startTime, long endTime, String remoteAddr, String method, String requestURL, String instance, int remotePort) {
         CtxInfoObject c = new CtxInfoObject();
         c.setStartTime(startTime);

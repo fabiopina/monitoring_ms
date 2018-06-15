@@ -7,9 +7,11 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.command.EventsResultCallback;
 import eureka.Eureka;
+import eureka.HeartbeatManager;
 
 public class DockerConnection {
     private static DockerClient dockerClient = null;
+    public static HeartbeatManager hearbeat;
 
     private static DockerClient getClient() {
         if(dockerClient != null) return dockerClient;
@@ -45,7 +47,7 @@ public class DockerConnection {
                     String networkName = getClient().inspectContainerCmd(containerID).exec().getHostConfig().getNetworkMode();
                     String ipAddr = getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().get(networkName).getIpAddress();
 
-                    new Eureka().register(containerID, image, port, hostname, ipAddr);
+                    new Eureka().register(hearbeat, containerID, image, port, hostname, ipAddr);
                 }
 
             }
@@ -55,12 +57,20 @@ public class DockerConnection {
 
                     String containerID = event.getId();
 
-                    new Eureka().unregister(containerID);
+                    new Eureka().unregister(hearbeat, containerID);
                 }
             }
 
             super.onNext(event);
         }
     };
+
+    public static void run() {
+        System.out.println("Starting heartbeat");
+        hearbeat = new HeartbeatManager();
+        hearbeat.start();
+        System.out.println("Listening for docker events...");
+        listenEvents();
+    }
 }
 

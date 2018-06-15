@@ -1,11 +1,19 @@
 package eureka;
 
+import entity.InfoClient;
 import http.HttpClient;
 
 public class EurekaClient {
-    private String eurekaURL, servicePath, hearbeatInterval, containerID, appName, hostName, ipAddr, port;
+    private HeartbeatManager heartbeat;
+    private String eurekaURL, servicePath, containerID, appName, hostName, ipAddr, port;
 
-    public EurekaClient(String containerID, String appName, String hostName, String ipAddr, String port) {
+    public EurekaClient() {
+        this.eurekaURL = "http://" + System.getenv("EUREKA") + "/eureka/";
+        this.servicePath = System.getenv("SERVICEPATH");
+    }
+
+    public EurekaClient(HeartbeatManager heartbeat, String containerID, String appName, String hostName, String ipAddr, String port) {
+        this.heartbeat = heartbeat;
         this.containerID = containerID;
         this.appName = appName;
         this.hostName = hostName;
@@ -13,7 +21,6 @@ public class EurekaClient {
         this.port = port;
         this.eurekaURL = "http://" + System.getenv("EUREKA") + "/eureka/";
         this.servicePath = System.getenv("SERVICEPATH");
-        this.hearbeatInterval = System.getenv("HEARTBEATINTERVAL");
     }
 
     public String getInstanceID() {
@@ -42,14 +49,18 @@ public class EurekaClient {
 
     public void startRegistrationProcess() {
         register();
+        heartbeat.addClient(containerID, InfoClient.constructInfoClient(appName, getInstanceID(), hostName, ipAddr, port));
     }
 
     public void register() {
+        System.out.println("Registering service: " + appName);
         String url = eurekaURL + servicePath + "/" + appName;
+        System.out.println("POST " + url);
 
         while (true) {
             try {
                 int code = HttpClient.post(url, getInstanceData());
+                System.out.println("RESPONSE CODE: " + code);
                 if (code == 204) {
                     break;
                 }
@@ -65,5 +76,28 @@ public class EurekaClient {
 
     }
 
+    public void deregister(HeartbeatManager heartbeat, String containerID) {
+        System.out.println("De-Registering service: " + heartbeat.getAppID(containerID));
+        String url = eurekaURL + servicePath + "/" + heartbeat.getAppID(containerID) + "/" + heartbeat.getInstanceID(containerID);
+        System.out.println("DELETE " + url);
+
+        while (true) {
+            try {
+                int code = HttpClient.delete(url);
+                System.out.println("RESPONSE CODE: " + code);
+                if (code == 200) {
+                    heartbeat.removeClient(containerID);
+                    break;
+                }
+            } catch (Exception e) {
+                try{
+                    System.out.println("Eureka is down. Reconnecting in 5 seconds...");
+                    Thread.sleep(5000);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
