@@ -22,7 +22,7 @@ services:
       - eureka
     environment:
       - EUREKA=eureka:8761
-      - SERVICEPATH=app
+      - SERVICEPATH=apps
       - HEARTBEATINTERVAL=30
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

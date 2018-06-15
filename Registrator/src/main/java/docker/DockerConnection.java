@@ -6,7 +6,7 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.command.EventsResultCallback;
-import eureka.EurekaClient;
+import eureka.Eureka;
 
 public class DockerConnection {
     private static DockerClient dockerClient = null;
@@ -38,14 +38,14 @@ public class DockerConnection {
                 if (getClient().inspectContainerCmd(event.getId()).exec().getConfig().getImage().contains("registerwitheureka_")) {
 
                     String containerID = event.getId();
-                    String image = getClient().inspectContainerCmd(containerID).exec().getConfig().getImage().replace("registerwitheureka_","");;
+                    String image = getClient().inspectContainerCmd(containerID).exec().getConfig().getImage();
                     String port = getClient().inspectContainerCmd(containerID).exec().getConfig().getExposedPorts()[0].toString();
                     if (port.contains("/")) port = port.split("/")[0];
                     String hostname = getClient().inspectContainerCmd(containerID).exec().getConfig().getHostName();
                     String networkName = getClient().inspectContainerCmd(containerID).exec().getHostConfig().getNetworkMode();
                     String ipAddr = getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().get(networkName).getIpAddress();
 
-                    new EurekaClient().register(containerID, image, port, hostname, ipAddr);
+                    new Eureka().register(containerID, image, port, hostname, ipAddr);
                 }
 
             }
@@ -55,7 +55,7 @@ public class DockerConnection {
 
                     String containerID = event.getId();
 
-                    new EurekaClient().unregister(containerID);
+                    new Eureka().unregister(containerID);
                 }
             }
 
