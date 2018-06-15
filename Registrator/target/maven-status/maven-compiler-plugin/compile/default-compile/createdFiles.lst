@@ -1,5 +1,9 @@
+entity/InfoClient.class
+eureka/HeartbeatManager$1.class
 docker/DockerConnection.class
-docker/DockerConnection$1.class
+http/HttpClient.class
 eureka/Eureka.class
-eureka/EurekaClient.class
 Registrator.class
+docker/DockerConnection$1.class
+eureka/HeartbeatManager.class
+eureka/EurekaClient.class
