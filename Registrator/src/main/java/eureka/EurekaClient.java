@@ -2,8 +2,11 @@ package eureka;
 
 import entity.InfoClient;
 import http.HttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EurekaClient {
+    private Logger logger = LoggerFactory.getLogger(EurekaClient.class);
     private HeartbeatManager heartbeat;
     private String eurekaURL, servicePath, containerID, appName, hostName, ipAddr, port;
 
@@ -53,20 +56,20 @@ public class EurekaClient {
     }
 
     public void register() {
-        System.out.println("Registering service: " + appName);
+        logger.info("Registering service: " + appName);
         String url = eurekaURL + servicePath + "/" + appName;
-        System.out.println("POST " + url);
+        logger.info("POST " + url);
 
         while (true) {
             try {
                 int code = HttpClient.post(url, getInstanceData());
-                System.out.println("RESPONSE CODE: " + code);
+                logger.info("RESPONSE CODE: " + code);
                 if (code == 204) {
                     break;
                 }
             } catch (Exception e) {
                 try{
-                    System.out.println("Eureka is down. Reconnecting in 5 seconds...");
+                    logger.info("Eureka is down. Reconnecting in 5 seconds...");
                     Thread.sleep(5000);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -77,21 +80,21 @@ public class EurekaClient {
     }
 
     public void deregister(HeartbeatManager heartbeat, String containerID) {
-        System.out.println("De-Registering service: " + heartbeat.getAppID(containerID));
+        logger.info("De-Registering service: " + heartbeat.getAppID(containerID));
         String url = eurekaURL + servicePath + "/" + heartbeat.getAppID(containerID) + "/" + heartbeat.getInstanceID(containerID);
-        System.out.println("DELETE " + url);
+        logger.info("DELETE " + url);
 
         while (true) {
             try {
                 int code = HttpClient.delete(url);
-                System.out.println("RESPONSE CODE: " + code);
+                logger.info("RESPONSE CODE: " + code);
                 if (code == 200) {
                     heartbeat.removeClient(containerID);
                     break;
                 }
             } catch (Exception e) {
                 try{
-                    System.out.println("Eureka is down. Reconnecting in 5 seconds...");
+                    logger.info("Eureka is down. Reconnecting in 5 seconds...");
                     Thread.sleep(5000);
                 } catch (Exception ex) {
                     ex.printStackTrace();

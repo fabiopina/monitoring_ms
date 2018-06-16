@@ -2,12 +2,14 @@ package eureka;
 
 import entity.InfoClient;
 import http.HttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HeartbeatManager {
+    private Logger logger = LoggerFactory.getLogger(HeartbeatManager.class);
     private Map<String, InfoClient> clients;
     private int heartbeatInterval;
     private String eurekaURL, servicePath;
@@ -44,13 +46,13 @@ public class HeartbeatManager {
     }
 
     public void renew() {
-        System.out.println("Starting heartbeat round: " + new Timestamp(System.currentTimeMillis()).toString());
+        logger.info("Starting heartbeat round ...");
         for (String key : clients.keySet()) {
             String url = eurekaURL + servicePath + "/" + clients.get(key).getAppID() + "/" + clients.get(key).getInstanceID();
-            System.out.println("PUT " + url);
+            logger.info("PUT " + url);
             try {
                 int code = HttpClient.put(url);
-                System.out.println("RESPONSE CODE: " + code);
+                logger.info("RESPONSE CODE: " + code);
                 if (code == 404) {
                     String image = clients.get(key).getAppID();
                     String port = clients.get(key).getPort();

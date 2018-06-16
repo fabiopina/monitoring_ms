@@ -8,8 +8,11 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.command.EventsResultCallback;
 import eureka.Eureka;
 import eureka.HeartbeatManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DockerConnection {
+    private static Logger logger = LoggerFactory.getLogger(DockerConnection.class);
     private static DockerClient dockerClient = null;
     public static HeartbeatManager hearbeat;
 
@@ -66,10 +69,10 @@ public class DockerConnection {
     };
 
     public static void run() {
-        System.out.println("Starting heartbeat");
+        logger.info("Starting heartbeat ...");
         hearbeat = new HeartbeatManager();
         hearbeat.start();
-        System.out.println("Listening for docker events...");
+        logger.info("Listening for docker events ...");
         listenEvents();
     }
 }
