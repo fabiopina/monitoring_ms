@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CleanInfoEntity {
-    long startTime, endTime, duration;
-    String sourceIpAddr, destinyMicroservice, destinyInstance, destinyIpAddr, destinyFunction;
-    int sourcePort;
+    private long startTime, endTime, duration;
+    private String sourceIpAddr, destinyMicroservice, destinyInstance, destinyIpAddr, destinyFunction;
+    private int sourcePort;
 }

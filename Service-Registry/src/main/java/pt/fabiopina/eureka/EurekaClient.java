@@ -11,7 +11,7 @@ import pt.fabiopina.entities.EventInfoEntity;
 public class EurekaClient {
     private Logger logger = LoggerFactory.getLogger(EurekaClient.class);
     private HeartbeatManager heartbeatManager;
-    private String eurekaURL, containerID, image, appName, hostName, ipAddr, port;
+    private String eurekaURL, containerID, image, hostName, ipAddr, port;
 
     public EurekaClient(HeartbeatManager heartbeatManager, String containerID) {
         this.heartbeatManager = heartbeatManager;
