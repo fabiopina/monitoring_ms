@@ -2,10 +2,12 @@ version: "3"
 services:
   eureka:
     image: fabiopina151/eureka-server:0.1
+    restart: always
     expose:
       - "8761" 
   zuul:
     image: fabiopina151/zuul-gateway:0.1
+    restart: always
     expose:
       - "4000" 
     environment:
@@ -14,6 +16,7 @@ services:
       - TABLE=info
   registry:
     image: fabiopina151/service-registry:0.1
+    restart: always
     environment:
       - EUREKA=eureka:8761
       - HEARTBEATINTERVAL=30
@@ -21,6 +24,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
   mariadb:
     image: mariadb
+    restart: always
     expose:
       - "3306"
     environment:
