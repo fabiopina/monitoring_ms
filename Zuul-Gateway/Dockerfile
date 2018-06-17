@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 ADD . /app/
 
-# Make port 4000 available to the world outside this container
-EXPOSE 4000
+# Make port 8765 available to the world outside this container
+EXPOSE 8765
 
 ADD /target/ZuulGateway.jar ZuulGateway.jar
 

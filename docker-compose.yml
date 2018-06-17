@@ -9,7 +9,7 @@ services:
     image: fabiopina151/zuul-gateway:0.1
     restart: always
     expose:
-      - "4000" 
+      - "8765" 
     environment:
       - EUREKA=eureka:8761
       - DATABASEADDRESS=mariadb
