@@ -1,0 +1,7 @@
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/eureka/EurekaClient.java
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/entities/EventInfoEntity.java
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/docker/DockerConnection.java
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/queue/EventQueue.java
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/entities/ClientHeartbeatEntity.java
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/ServiceRegistryApplication.java
+/home/fpina/monitoring_ms/Service-Registry/src/main/java/pt/fabiopina/eureka/HeartbeatManager.java

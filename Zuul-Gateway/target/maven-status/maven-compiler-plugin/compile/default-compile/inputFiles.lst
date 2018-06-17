@@ -1,0 +1,7 @@
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/filters/post/InfoRequestFilter.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/database/MysqlClient.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/entities/RawInfoEntity.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/filters/pre/TimeTrackerFilter.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/entities/CleanInfoEntity.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/queue/RequestQueue.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/ZuulGatewayApplication.java

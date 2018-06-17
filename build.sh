@@ -3,7 +3,7 @@
 # Delete images
 docker rmi fabiopina151/eureka-server:0.1
 docker rmi fabiopina151/zuul-gateway:0.1
-docker rmi fabiopina151/registrator:0.1
+docker rmi fabiopina151/service-registry:0.1
 
 # Build Zuul
 cd Zuul-Gateway
@@ -20,13 +20,13 @@ docker build -t fabiopina151/eureka-server:0.1 .
 cd ..
 
 # Build Registrator
-cd Registrator
+cd Service-Registry
 mvn clean
 mvn install
-docker build -t fabiopina151/registrator:0.1 . 
+docker build -t fabiopina151/service-registry:0.1 . 
 cd ..
 
 # Upload images to docker hub
 docker push fabiopina151/zuul-gateway:0.1
 docker push fabiopina151/eureka-server:0.1
-docker push fabiopina151/registrator:0.1
+docker push fabiopina151/service-registry:0.1

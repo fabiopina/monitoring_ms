@@ -3,86 +3,28 @@ services:
   eureka:
     image: fabiopina151/eureka-server:0.1
     expose:
-      - "8761"
+      - "8761" 
   zuul:
     image: fabiopina151/zuul-gateway:0.1
     expose:
-      - "4000"
-    ports:
-      - "8080:4000"
-    links:
-      - eureka
+      - "4000" 
     environment:
       - EUREKA=eureka:8761
-      - DATABASEADDRESS=192.168.1.32
-      - TABLE=teste
-  registrator:
-    image: fabiopina151/registrator:0.1
-    links:
-      - eureka
+      - DATABASEADDRESS=mariadb
+      - TABLE=info
+  registry:
+    image: fabiopina151/service-registry:0.1
     environment:
       - EUREKA=eureka:8761
-      - SERVICEPATH=apps
       - HEARTBEATINTERVAL=30
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  ms-db:
+  mariadb:
     image: mariadb
     expose:
       - "3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=ribeiro
-  users:
-    image: fabiopina151/registerwitheureka_users-ms:0.1
-    expose:
-      - "5000"
-    links:
-      - ms-db
-    environment:
-      - DATABASEADDRESS=ms-db:3306
-    depends_on:
-      - registrator  
-  songs:
-    image: fabiopina151/registerwitheureka_songs-ms:0.1
-    expose:
-      - "5001"
-    links:
-      - ms-db
-    environment:
-      - DATABASEADDRESS=ms-db:3306
-    depends_on:
-      - registrator 
-  playlists:
-    image: fabiopina151/registerwitheureka_playlists-ms:0.1
-    expose:
-      - "5002"
-    links:
-      - ms-db
-      - zuul
-    environment:
-      - DATABASEADDRESS=ms-db:3306
-      - SONGSADDRESS=zuul:4000/songs-ms
-    depends_on:
-      - registrator 
-  auth:
-    image: fabiopina151/registerwitheureka_auth-ms:0.1
-    expose:
-      - "5003"
-    links:
-      - zuul
-    environment:
-      - USERSADDRESS=zuul:4000/users-ms
-    depends_on:
-      - registrator 
-  aggr:
-    image: fabiopina151/registerwitheureka_aggr-ms:0.1
-    expose:
-      - "5004"
-    links:
-      - zuul
-    environment:
-      - PLAYLISTSADDRESS=zuul:4000/playlists-ms
-      - SONGSADDRESS=zuul:4000/songs-ms
-    depends_on:
-      - registrator 
-
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=data

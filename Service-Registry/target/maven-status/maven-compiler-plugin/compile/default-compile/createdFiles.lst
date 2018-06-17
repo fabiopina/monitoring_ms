@@ -1,0 +1,8 @@
+pt/fabiopina/entities/EventInfoEntity.class
+pt/fabiopina/eureka/HeartbeatManager.class
+pt/fabiopina/ServiceRegistryApplication.class
+pt/fabiopina/docker/DockerConnection$1.class
+pt/fabiopina/queue/EventQueue.class
+pt/fabiopina/docker/DockerConnection.class
+pt/fabiopina/eureka/EurekaClient.class
+pt/fabiopina/entities/ClientHeartbeatEntity.class
