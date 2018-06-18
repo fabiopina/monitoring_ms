@@ -13,7 +13,7 @@ services:
   zuul:
     image: fabiopina151/zuul-gateway:0.1
     deploy: 
-      replicas: 3
+      replicas: 1
       restart_policy:
         condition: on-failure
     ports:

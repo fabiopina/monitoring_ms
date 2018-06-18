@@ -3,7 +3,7 @@ services:
   ms-db:
     image: mariadb
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     environment:
@@ -33,33 +33,33 @@ services:
   playlists:
     image: fabiopina151/registerwitheureka_playlists-ms:0.1
     deploy: 
-      replicas: 3
+      replicas: 2
       restart_policy:
         condition: on-failure
     environment:
       - DATABASEADDRESS=ms-db:3306
-      - SONGSADDRESS=songs:5001
+      - SONGSADDRESS=zuul:8765/songs-ms
     networks:
       - my-network
   auth:
     image: fabiopina151/registerwitheureka_auth-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     environment:
-      - USERSADDRESS=10.0.2.15:8765
+      - USERSADDRESS=zuul:8765/users-ms
     networks:
       - my-network
   aggr:
     image: fabiopina151/registerwitheureka_aggr-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     environment:
-      - PLAYLISTSADDRESS=playlists:5002
-      - SONGSADDRESS=songs:5001
+      - PLAYLISTSADDRESS=zuul:8765/playlists-ms
+      - SONGSADDRESS=zuul:8765/songs-ms
     networks:
       - my-network
 networks:
