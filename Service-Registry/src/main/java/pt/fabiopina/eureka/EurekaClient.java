@@ -60,8 +60,10 @@ public class EurekaClient {
     }
 
     public void startRegistrationProcess() {
-        register();
-        if (!heartbeatManager.isClient(containerID)) heartbeatManager.addClient(containerID, new ClientHeartbeatEntity(getAppName(), getInstanceID(), containerID, image, ipAddr, port));
+        if (!heartbeatManager.isClient(containerID)) {
+            register();
+            heartbeatManager.addClient(containerID, new ClientHeartbeatEntity(getAppName(), getInstanceID(), containerID, image, ipAddr, port));
+        }
     }
 
     public void register() {

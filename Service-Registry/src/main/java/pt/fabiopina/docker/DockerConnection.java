@@ -24,6 +24,7 @@ public class DockerConnection {
     private DockerClient dockerClient = null;
     private HeartbeatManager heartbeatManager;
     private EventQueue eventQueue;
+    private String currentNetwork;
 
     public DockerConnection(HeartbeatManager heartbeatManager, EventQueue queue) {
         this.heartbeatManager = heartbeatManager;
@@ -55,21 +56,11 @@ public class DockerConnection {
         public void onNext(Event event) {
             if (event.getAction().equals("start") || event.getAction().equals("stop")) {
                 if (getClient().inspectContainerCmd(event.getId()).exec().getConfig().getImage().contains("registerwitheureka_")) {
-
-                    ListNetworksCmd networksCmd = getClient().listNetworksCmd();
-                    List<Network> listNetworks = networksCmd.exec();
-
                     String containerID = event.getId();
                     String image = getClient().inspectContainerCmd(containerID).exec().getConfig().getImage();
                     String port = getClient().inspectContainerCmd(containerID).exec().getConfig().getExposedPorts()[0].toString();
                     if (port.contains("/")) port = port.split("/")[0];
-                    String ipAddr = null;
-                    for (Network network: listNetworks) {
-                        if (getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().containsKey(network.getName())) {
-                            ipAddr = getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().get(network.getName()).getIpAddress();
-                        }
-                    }
-                    eventQueue.addEvent(new EventInfoEntity(event.getAction(), containerID, image, ipAddr, port));
+                    eventQueue.addEvent(new EventInfoEntity(event.getAction(), containerID, image, null, port));
                 }
             }
             super.onNext(event);
@@ -77,27 +68,31 @@ public class DockerConnection {
     };
 
     public String checkDockerInfo() {
-        logger.info("Checking for containers already running ...");
-
-        ListContainersCmd listContainersCmd = getClient().listContainersCmd().withStatusFilter("running");
-        List<Container> listContainers = listContainersCmd.exec();
+        logger.info("Checking for current network ...");
 
         ListNetworksCmd networksCmd = getClient().listNetworksCmd();
         List<Network> listNetworks = networksCmd.exec();
 
-        for (Container c: listContainers) {
+        ListContainersCmd listContainersCmd = getClient().listContainersCmd().withStatusFilter("running");
+        List<Container> listContainers = listContainersCmd.exec();
 
+        for (Container c: listContainers) {
+            if (c.getImage().contains(System.getenv("SERVICEREGISTRYIMAGE"))) {
+                for (Network network: listNetworks) {
+                    if (c.getNetworkSettings().getNetworks().containsKey(network.getName())) {
+                        currentNetwork = network.getName();
+                    }
+                }
+            }
+        }
+        logger.info("Checking for containers already running ...");
+
+        for (Container c: listContainers) {
             if (c.getImage().contains("registerwitheureka_")) {
                 String containerID = c.getId();
                 String image = c.getImage();
                 String port = c.getPorts()[0].getPrivatePort()+"";
-                String ipAddr = null;
-                for (Network network: listNetworks) {
-                    if (c.getNetworkSettings().getNetworks().containsKey(network.getName())) {
-                        c.getNetworkSettings().getNetworks().get(network.getName()).getIpAddress();
-                    }
-                }
-                new EurekaClient(heartbeatManager, new EventInfoEntity("start", containerID, image, ipAddr, port)).startRegistrationProcess();
+                eventQueue.addEvent(new EventInfoEntity("start", containerID, image, null, port));
             }
         }
         return "200";
@@ -109,8 +104,10 @@ public class DockerConnection {
         while (true) {
             try {
                 EventInfoEntity event = eventQueue.getEvent();
+                String ipAddr = getClient().inspectContainerCmd(event.getContainerID()).exec().getNetworkSettings().getNetworks().get(currentNetwork).getIpAddress();
+                event.setIpAddr(ipAddr);
                 if (event.getEvent().equals("start")) {
-                    new EurekaClient(heartbeatManager, new EventInfoEntity("start", event.getContainerID(), event.getImage(), event.getIpAddr(), event.getPort())).startRegistrationProcess();
+                    new EurekaClient(heartbeatManager, event).startRegistrationProcess();
                 }
                 if (event.getEvent().equals("stop")) {
                     new EurekaClient(heartbeatManager, event.getContainerID()).deregister();

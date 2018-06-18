@@ -30,6 +30,7 @@ services:
       restart_policy:
         condition: on-failure
     environment:
+      - SERVICEREGISTRYIMAGE=fabiopina151/service-registry:0.1
       - EUREKA=eureka:8761
       - HEARTBEATINTERVAL=30
     volumes:
