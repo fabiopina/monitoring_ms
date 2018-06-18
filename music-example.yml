@@ -1,0 +1,69 @@
+version: "3"
+services:
+  ms-db:
+    image: mariadb
+    deploy: 
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=ribeiro
+    networks:
+      - my-network
+  users:
+    image: fabiopina151/registerwitheureka_users-ms:0.1
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+    networks:
+      - my-network
+  songs:
+    image: fabiopina151/registerwitheureka_songs-ms:0.1
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+    networks:
+      - my-network
+  playlists:
+    image: fabiopina151/registerwitheureka_playlists-ms:0.1
+    deploy: 
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+      - SONGSADDRESS=songs:5001
+    networks:
+      - my-network
+  auth:
+    image: fabiopina151/registerwitheureka_auth-ms:0.1
+    deploy: 
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - USERSADDRESS=users:5000
+    networks:
+      - my-network
+  aggr:
+    image: fabiopina151/registerwitheureka_aggr-ms:0.1
+    deploy: 
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - PLAYLISTSADDRESS=playlists:5002
+      - SONGSADDRESS=songs:5001
+    networks:
+      - my-network
+networks:
+  my-network:
+    external:
+      name: my-network
+

@@ -2,8 +2,10 @@ package pt.fabiopina.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.ListContainersCmd;
+import com.github.dockerjava.api.command.ListNetworksCmd;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Event;
+import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -53,17 +55,23 @@ public class DockerConnection {
         public void onNext(Event event) {
             if (event.getAction().equals("start") || event.getAction().equals("stop")) {
                 if (getClient().inspectContainerCmd(event.getId()).exec().getConfig().getImage().contains("registerwitheureka_")) {
+
+                    ListNetworksCmd networksCmd = getClient().listNetworksCmd();
+                    List<Network> listNetworks = networksCmd.exec();
+
                     String containerID = event.getId();
                     String image = getClient().inspectContainerCmd(containerID).exec().getConfig().getImage();
                     String port = getClient().inspectContainerCmd(containerID).exec().getConfig().getExposedPorts()[0].toString();
                     if (port.contains("/")) port = port.split("/")[0];
-                    String networkName = getClient().inspectContainerCmd(containerID).exec().getHostConfig().getNetworkMode();
-                    String ipAddr = getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().get(networkName).getIpAddress();
-
+                    String ipAddr = null;
+                    for (Network network: listNetworks) {
+                        if (getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().containsKey(network.getName())) {
+                            ipAddr = getClient().inspectContainerCmd(containerID).exec().getNetworkSettings().getNetworks().get(network.getName()).getIpAddress();
+                        }
+                    }
                     eventQueue.addEvent(new EventInfoEntity(event.getAction(), containerID, image, ipAddr, port));
                 }
             }
-
             super.onNext(event);
         }
     };
@@ -74,14 +82,21 @@ public class DockerConnection {
         ListContainersCmd listContainersCmd = getClient().listContainersCmd().withStatusFilter("running");
         List<Container> listContainers = listContainersCmd.exec();
 
+        ListNetworksCmd networksCmd = getClient().listNetworksCmd();
+        List<Network> listNetworks = networksCmd.exec();
+
         for (Container c: listContainers) {
+
             if (c.getImage().contains("registerwitheureka_")) {
                 String containerID = c.getId();
                 String image = c.getImage();
                 String port = c.getPorts()[0].getPrivatePort()+"";
-                String networkMode = c.getHostConfig().getNetworkMode();
-                String ipAddr = c.getNetworkSettings().getNetworks().get(networkMode).getIpAddress();
-
+                String ipAddr = null;
+                for (Network network: listNetworks) {
+                    if (c.getNetworkSettings().getNetworks().containsKey(network.getName())) {
+                        c.getNetworkSettings().getNetworks().get(network.getName()).getIpAddress();
+                    }
+                }
                 new EurekaClient(heartbeatManager, new EventInfoEntity("start", containerID, image, ipAddr, port)).startRegistrationProcess();
             }
         }
@@ -100,11 +115,9 @@ public class DockerConnection {
                 if (event.getEvent().equals("stop")) {
                     new EurekaClient(heartbeatManager, event.getContainerID()).deregister();
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

@@ -2,33 +2,53 @@ version: "3"
 services:
   eureka:
     image: fabiopina151/eureka-server:0.1
-    restart: on-failure
-    expose:
-      - "8761" 
+    deploy: 
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
   zuul:
     image: fabiopina151/zuul-gateway:0.1
-    restart: on-failure
-    expose:
-      - "8765" 
+    deploy: 
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "8765:8765"
     environment:
       - EUREKA=eureka:8761
       - DATABASEADDRESS=mariadb
       - TABLE=info
+    networks:
+      - my-network
   registry:
     image: fabiopina151/service-registry:0.1
-    restart: on-failure
+    deploy: 
+      restart_policy:
+        condition: on-failure
     environment:
       - EUREKA=eureka:8761
       - HEARTBEATINTERVAL=30
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - my-network
   mariadb:
     image: mariadb
-    restart: on-failure
-    expose:
-      - "3306"
+    deploy: 
+      restart_policy:
+        condition: on-failure
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=data
+    networks:
+      - my-network
+networks:
+  my-network:
+    external:
+      name: my-network
