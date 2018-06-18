@@ -16,9 +16,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
   instance:
-    prefer-ip-address: false
-    #prefer-ip-address: true
-
+    prefer-ip-address: true
 
 # Increase the Hystrix timeout to 60s (for all)
 hystrix:
