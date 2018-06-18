@@ -3,7 +3,7 @@ services:
   ms-db:
     image: mariadb
     deploy: 
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
     environment:
@@ -13,7 +13,7 @@ services:
   users:
     image: fabiopina151/registerwitheureka_users-ms:0.1
     deploy: 
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
     environment:
@@ -23,7 +23,7 @@ services:
   songs:
     image: fabiopina151/registerwitheureka_songs-ms:0.1
     deploy: 
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
     environment:
@@ -33,7 +33,7 @@ services:
   playlists:
     image: fabiopina151/registerwitheureka_playlists-ms:0.1
     deploy: 
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
     environment:
@@ -44,7 +44,7 @@ services:
   auth:
     image: fabiopina151/registerwitheureka_auth-ms:0.1
     deploy: 
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
     environment:
@@ -54,7 +54,7 @@ services:
   aggr:
     image: fabiopina151/registerwitheureka_aggr-ms:0.1
     deploy: 
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
     environment:
