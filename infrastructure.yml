@@ -28,8 +28,9 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
+    labels:
+      - "pt.fabiopina.mma.service.registry=true"
     environment:
-      - SERVICEREGISTRYIMAGE=fabiopina151/service-registry:0.1
       - EUREKA=eureka:8761
       - HEARTBEATINTERVAL=30
     volumes:

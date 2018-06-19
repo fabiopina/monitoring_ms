@@ -54,7 +54,7 @@ public class HeartbeatManager {
                             .asJson();
                     logger.info("Eureka response: " + jsonResponse.getStatus());
                     if (jsonResponse.getStatus() == 404) {
-                        eventQueue.addEvent(new EventInfoEntity("start", clients.get(key).getContainerID(), clients.get(key).getImage(), clients.get(key).getIpAddr(), clients.get(key).getPort()));
+                        eventQueue.addEvent(new EventInfoEntity("start", clients.get(key).getContainerID(), clients.get(key).getNamespace(), clients.get(key).getServiceName(), clients.get(key).getIpAddr(), clients.get(key).getPort()));
                     }
                 }
 

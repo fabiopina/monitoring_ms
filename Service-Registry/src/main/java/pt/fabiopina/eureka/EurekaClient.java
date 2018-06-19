@@ -11,7 +11,7 @@ import pt.fabiopina.entities.EventInfoEntity;
 public class EurekaClient {
     private Logger logger = LoggerFactory.getLogger(EurekaClient.class);
     private HeartbeatManager heartbeatManager;
-    private String eurekaURL, containerID, image, hostName, ipAddr, port;
+    private String eurekaURL, containerID, namespace, serviceName, hostName, ipAddr, port;
 
     public EurekaClient(HeartbeatManager heartbeatManager, String containerID) {
         this.heartbeatManager = heartbeatManager;
@@ -22,7 +22,8 @@ public class EurekaClient {
     public EurekaClient(HeartbeatManager heartbeatManager, EventInfoEntity currentClient) {
         this.heartbeatManager = heartbeatManager;
         this.containerID = currentClient.getContainerID();
-        this.image = currentClient.getImage();
+        this.namespace = currentClient.getNamespace();
+        this.serviceName = currentClient.getServiceName();
         this.hostName = currentClient.getContainerID().substring(0,12);
         this.ipAddr = currentClient.getIpAddr();
         this.port = currentClient.getPort();
@@ -30,9 +31,8 @@ public class EurekaClient {
     }
 
     public String getAppName() {
-        if (image.contains("/")) image = image.substring(image.indexOf("/")+1).trim();
-        if (image.contains(":")) image = image.split(":")[0];
-        return image.replace("registerwitheureka_", "");
+        if (namespace == null) return serviceName;
+        return namespace + "-" + serviceName.substring(namespace.length()+1);
     }
 
     public String getInstanceID() {
@@ -62,7 +62,7 @@ public class EurekaClient {
     public void startRegistrationProcess() {
         if (!heartbeatManager.isClient(containerID)) {
             register();
-            heartbeatManager.addClient(containerID, new ClientHeartbeatEntity(getAppName(), getInstanceID(), containerID, image, ipAddr, port));
+            heartbeatManager.addClient(containerID, new ClientHeartbeatEntity(getAppName(), getInstanceID(), containerID, namespace, serviceName, ipAddr, port));
         }
     }
 

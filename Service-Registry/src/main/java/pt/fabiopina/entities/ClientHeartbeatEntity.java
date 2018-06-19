@@ -12,5 +12,5 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientHeartbeatEntity {
-    String appName, instanceID, containerID, image, ipAddr, port;
+    String appName, instanceID, containerID, namespace, serviceName, ipAddr, port;
 }

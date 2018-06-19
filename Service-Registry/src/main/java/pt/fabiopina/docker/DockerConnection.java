@@ -55,12 +55,18 @@ public class DockerConnection {
         @Override
         public void onNext(Event event) {
             if (event.getAction().equals("start") || event.getAction().equals("stop")) {
-                if (getClient().inspectContainerCmd(event.getId()).exec().getConfig().getImage().contains("registerwitheureka_")) {
-                    String containerID = event.getId();
-                    String image = getClient().inspectContainerCmd(containerID).exec().getConfig().getImage();
-                    String port = getClient().inspectContainerCmd(containerID).exec().getConfig().getExposedPorts()[0].toString();
-                    if (port.contains("/")) port = port.split("/")[0];
-                    eventQueue.addEvent(new EventInfoEntity(event.getAction(), containerID, image, null, port));
+                if (getClient().inspectContainerCmd(event.getId()).exec().getConfig().getLabels().containsKey("pt.fabiopina.mma.registry.eureka")) {
+                    if (getClient().inspectContainerCmd(event.getId()).exec().getConfig().getLabels().get("pt.fabiopina.mma.registry.eureka").equals("true")) {
+                        String containerID = event.getId();
+                        String namespace = null;
+                        if ((getClient().inspectContainerCmd(event.getId()).exec().getConfig().getLabels().containsKey("com.docker.stack.namespace"))) {
+                            namespace = getClient().inspectContainerCmd(event.getId()).exec().getConfig().getLabels().get("com.docker.stack.namespace");
+                        }
+                        String serviceName = getClient().inspectContainerCmd(event.getId()).exec().getConfig().getLabels().get("com.docker.swarm.service.name");
+                        String port = getClient().inspectContainerCmd(containerID).exec().getConfig().getExposedPorts()[0].toString();
+                        if (port.contains("/")) port = port.split("/")[0];
+                        eventQueue.addEvent(new EventInfoEntity(event.getAction(), containerID, namespace, serviceName, null, port));
+                    }
                 }
             }
             super.onNext(event);
@@ -77,10 +83,13 @@ public class DockerConnection {
         List<Container> listContainers = listContainersCmd.exec();
 
         for (Container c: listContainers) {
-            if (c.getImage().contains(System.getenv("SERVICEREGISTRYIMAGE"))) {
-                for (Network network: listNetworks) {
-                    if (c.getNetworkSettings().getNetworks().containsKey(network.getName())) {
-                        currentNetwork = network.getName();
+
+            if (c.getLabels().containsKey("pt.fabiopina.mma.service.registry")) {
+                if (c.getLabels().get("pt.fabiopina.mma.service.registry").equals("true")) {
+                    for (Network network: listNetworks) {
+                        if (c.getNetworkSettings().getNetworks().containsKey(network.getName())) {
+                            currentNetwork = network.getName();
+                        }
                     }
                 }
             }
@@ -88,11 +97,17 @@ public class DockerConnection {
         logger.info("Checking for containers already running ...");
 
         for (Container c: listContainers) {
-            if (c.getImage().contains("registerwitheureka_")) {
-                String containerID = c.getId();
-                String image = c.getImage();
-                String port = c.getPorts()[0].getPrivatePort()+"";
-                eventQueue.addEvent(new EventInfoEntity("start", containerID, image, null, port));
+            if (c.getLabels().containsKey("pt.fabiopina.mma.registry.eureka")) {
+                if (c.getLabels().get("pt.fabiopina.mma.registry.eureka").equals("true")) {
+                    String containerID = c.getId();
+                    String namespace = null;
+                    if (c.getLabels().containsKey("com.docker.stack.namespace")) {
+                        namespace = c.getLabels().get("com.docker.stack.namespace");
+                    }
+                    String serviceName = c.getLabels().get("com.docker.swarm.service.name");
+                    String port = c.getPorts()[0].getPrivatePort()+"";
+                    eventQueue.addEvent(new EventInfoEntity("start", containerID, namespace, serviceName, null, port));
+                }
             }
         }
         return "200";

@@ -12,5 +12,5 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventInfoEntity {
-    String event, containerID, image, ipAddr, port;
+    String event, containerID, namespace, serviceName, ipAddr, port;
 }
