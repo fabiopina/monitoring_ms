@@ -27,7 +27,7 @@ services:
   registry:
     image: fabiopina151/service-registry:0.1
     deploy: 
-      replicas: 1
+      mode: global
       restart_policy:
         condition: on-failure
     environment:
