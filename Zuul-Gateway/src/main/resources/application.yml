@@ -16,7 +16,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
   instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     prefer-ip-address: true
+    #hostname: ${HOSTNAME:spring.application.name}
+    #ip-address: ${IPADDRESS:127.0.0.1}
 
 # Increase the Hystrix timeout to 60s (for all)
 hystrix:

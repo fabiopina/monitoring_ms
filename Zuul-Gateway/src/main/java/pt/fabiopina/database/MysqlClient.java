@@ -1,12 +1,9 @@
 package pt.fabiopina.database;
 
-import org.ini4j.Ini;
-import org.ini4j.IniPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.fabiopina.entities.CleanInfoEntity;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -18,17 +15,10 @@ public class MysqlClient {
     public Connection getConnection() {
         if (conn != null) return conn;
 
-        Ini ini = null;
-        try {
-            ini = new Ini(new File("config.ini"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        java.util.prefs.Preferences prefs = new IniPreferences(ini);
-        String user = prefs.node("MySQL").get("user", null);
-        String password = prefs.node("MySQL").get("password", null);
-        String database = prefs.node("MySQL").get("database", null);
-        String host = System.getenv("DATABASEADDRESS");
+        String user = System.getenv("DBUSER");
+        String password = System.getenv("DBPASSWORD");
+        String database = System.getenv("DBDATABASE");
+        String host = System.getenv("DBADDRESS");
 
         return getConnection(host, database, user, password);
     }
@@ -57,7 +47,7 @@ public class MysqlClient {
                 if(failed) Thread.sleep(5000);
 
                 Statement stmt = getConnection().createStatement();
-                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("TABLE") + " (" +
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("DBTABLE") + " (" +
                         "id INT NOT NULL AUTO_INCREMENT," +
                         "start_time BIGINT," +
                         "end_time BIGINT," +
@@ -86,7 +76,7 @@ public class MysqlClient {
                 if(failed) Thread.sleep(5000);
 
                 Statement stmt = getConnection().createStatement();
-                stmt.executeUpdate("INSERT INTO " + System.getenv("TABLE") + " (start_time, end_time, duration, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
+                stmt.executeUpdate("INSERT INTO " + System.getenv("DBTABLE") + " (start_time, end_time, duration, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
                         " VALUES ("+ info.getStartTime() +
                         ", " + info.getEndTime() + "" +
                         ", " + info.getDuration() + "" +

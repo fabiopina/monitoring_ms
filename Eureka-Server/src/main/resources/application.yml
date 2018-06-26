@@ -7,7 +7,7 @@ spring:
 
 eureka:
   client:
-    registerWithEureka: false
-    fetchRegistry: false
+    serviceUrl:
+      defaultZone: ${ADDITIONAL_EUREKA_SERVER_LIST:http://10.0.2.15:8761/eureka/}
     server:
       waitTimeInMsWhenSyncEmpty: 0
