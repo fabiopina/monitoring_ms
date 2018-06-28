@@ -45,6 +45,8 @@ services:
     deploy: 
       restart_policy:
         condition: on-failure
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=user
