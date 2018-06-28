@@ -1,36 +1,12 @@
 version: "3"
 services:
-  eureka1:
+  eureka:
     image: fabiopina151/eureka-server:0.1
     deploy: 
       restart_policy:
         condition: on-failure
     ports:
       - "8761:8761"
-    environment:
-      - ADDITIONAL_EUREKA_SERVER_LIST=http://eureka2:8761/eureka/,http://eureka3:8761/eureka/
-    networks:
-      - my-network
-  eureka2:
-    image: fabiopina151/eureka-server:0.1
-    deploy: 
-      restart_policy:
-        condition: on-failure
-    ports:
-      - "8762:8761"
-    environment:
-      - ADDITIONAL_EUREKA_SERVER_LIST=http://eureka1:8761/eureka/,http://eureka3:8761/eureka/
-    networks:
-      - my-network
-  eureka3:
-    image: fabiopina151/eureka-server:0.1
-    deploy: 
-      restart_policy:
-        condition: on-failure
-    ports:
-      - "8763:8761"
-    environment:
-      - ADDITIONAL_EUREKA_SERVER_LIST=http://eureka1:8761/eureka/,http://eureka2:8761/eureka/
     networks:
       - my-network
   zuul:
@@ -39,9 +15,9 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - "8765:8765"
+      - "8080:8765"
     environment:
-      - EUREKA=eureka1:8761
+      - EUREKA=eureka:8761
       - DBADDRESS=mariadb
       - DBDATABASE=data
       - DBUSER=user
@@ -58,7 +34,7 @@ services:
     labels:
       - "pt.fabiopina.mma.service.registry=true"
     environment:
-      - EUREKA=eureka1:8761
+      - EUREKA=eureka:8761
       - HEARTBEATINTERVAL=30
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

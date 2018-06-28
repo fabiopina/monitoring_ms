@@ -13,7 +13,7 @@ services:
   users:
     image: fabiopina151/users-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     labels:
@@ -25,7 +25,7 @@ services:
   songs:
     image: fabiopina151/songs-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     labels:
@@ -37,39 +37,39 @@ services:
   playlists:
     image: fabiopina151/playlists-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     labels:
       - "pt.fabiopina.mma.registry.eureka=true"
     environment:
       - DATABASEADDRESS=ms-db:3306
-      - SONGSADDRESS=zuul:8765/songs-ms
+      - SONGSADDRESS=zuul:8765/music-songs
     networks:
       - my-network
   auth:
     image: fabiopina151/auth-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     labels:
       - "pt.fabiopina.mma.registry.eureka=true"
     environment:
-      - USERSADDRESS=zuul:8765/users-ms
+      - USERSADDRESS=zuul:8765/music-users
     networks:
       - my-network
   aggr:
     image: fabiopina151/aggr-ms:0.1
     deploy: 
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     labels:
       - "pt.fabiopina.mma.registry.eureka=true"
     environment:
-      - PLAYLISTSADDRESS=zuul:8765/playlists-ms
-      - SONGSADDRESS=zuul:8765/songs-ms
+      - PLAYLISTSADDRESS=zuul:8765/music-playlists
+      - SONGSADDRESS=zuul:8765/music-songs
     networks:
       - my-network
 networks:

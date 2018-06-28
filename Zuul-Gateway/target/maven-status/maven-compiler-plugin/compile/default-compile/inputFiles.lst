@@ -5,3 +5,4 @@
 /home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/entities/CleanInfoEntity.java
 /home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/queue/RequestQueue.java
 /home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/ZuulGatewayApplication.java
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/config/EurekaClientConfig.java

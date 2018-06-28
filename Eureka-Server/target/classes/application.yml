@@ -7,7 +7,5 @@ spring:
 
 eureka:
   client:
-    serviceUrl:
-      defaultZone: ${ADDITIONAL_EUREKA_SERVER_LIST:}
     server:
       waitTimeInMsWhenSyncEmpty: 0
