@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class RawInfoEntity {
     private String remoteAddr, method, requestURL, instance;
-    private int remotePort;
+    private int remotePort, statusCode;
     private long startTime, endTime;
 
 }

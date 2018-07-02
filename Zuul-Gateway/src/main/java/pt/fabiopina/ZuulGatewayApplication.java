@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
-import pt.fabiopina.config.EurekaClientConfig;
 import pt.fabiopina.filters.post.InfoRequestFilter;
 import pt.fabiopina.filters.pre.TimeTrackerFilter;
 import pt.fabiopina.queue.RequestQueue;
@@ -19,11 +18,6 @@ public class ZuulGatewayApplication {
     public static void main(String[] args) {
         q.start();
         SpringApplication.run(ZuulGatewayApplication.class, args);
-    }
-
-    @Bean
-    public EurekaClientConfig eurekaClientConfig() {
-        return new EurekaClientConfig();
     }
 
     @Bean

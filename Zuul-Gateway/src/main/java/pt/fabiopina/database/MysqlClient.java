@@ -56,8 +56,11 @@ public class MysqlClient {
                         "source_port INT," +
                         "destiny_microservice VARCHAR(255)," +
                         "destiny_instance VARCHAR(255)," +
+                        "destiny_port INT," +
                         "destiny_ip VARCHAR(255)," +
-                        "destiny_function VARCHAR(255)," +
+                        "method VARCHAR(255)," +
+                        "url VARCHAR(255)," +
+                        "status_code INT," +
                         "PRIMARY KEY(id))");
                 break;
             } catch (Exception e) {
@@ -76,7 +79,7 @@ public class MysqlClient {
                 if(failed) Thread.sleep(5000);
 
                 Statement stmt = getConnection().createStatement();
-                stmt.executeUpdate("INSERT INTO " + System.getenv("DBTABLE") + " (start_time, end_time, duration, source_ip, source_port, destiny_microservice, destiny_instance, destiny_ip, destiny_function)" +
+                stmt.executeUpdate("INSERT INTO " + System.getenv("DBTABLE") + " (start_time, end_time, duration, source_ip, source_port, destiny_microservice, destiny_instance, destiny_port, destiny_ip, method, url, status_code)" +
                         " VALUES ("+ info.getStartTime() +
                         ", " + info.getEndTime() + "" +
                         ", " + info.getDuration() + "" +
@@ -84,8 +87,11 @@ public class MysqlClient {
                         ", " + info.getSourcePort() + "" +
                         ", '" + info.getDestinyMicroservice() + "'" +
                         ", '" + info.getDestinyInstance() + "'" +
+                        ", " + info.getDestinyPort() + "" +
                         ", '" + info.getDestinyIpAddr() + "'" +
-                        ", '" + info.getDestinyFunction() + "')");
+                        ", '" + info.getMethod() + "'" +
+                        ", '" + info.getUrl() + "'" +
+                        ", " + info.getStatusCode() + ")");
                 break;
             } catch (Exception e) {
                 failed = true;

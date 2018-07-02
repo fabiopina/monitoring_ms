@@ -36,7 +36,7 @@ public class InfoRequestFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
 
         long timeEnd = System.currentTimeMillis();
-        queue.add(new RawInfoEntity(request.getRemoteAddr(), request.getMethod(), request.getRequestURL().toString(), ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7), request.getRemotePort(), Long.parseLong(ctx.getZuulRequestHeaders().get("time-start")), timeEnd));
+        queue.add(new RawInfoEntity(request.getRemoteAddr(), request.getMethod(), request.getRequestURL().toString(), ((IResponse) ctx.get("ribbonResponse")).getRequestedURI().toString().substring(7), request.getRemotePort(), ctx.getResponseStatusCode(), Long.parseLong(ctx.getZuulRequestHeaders().get("time-start")), timeEnd));
         return null;
     }
 }

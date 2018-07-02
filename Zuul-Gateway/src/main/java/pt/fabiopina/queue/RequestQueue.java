@@ -40,26 +40,26 @@ public class RequestQueue {
 
     public void processElement(RawInfoEntity element) {
         String destinyMicroservice = element.getRequestURL().split("/")[3];
-        String destinyInstance = element.getInstance().split("/")[0];
+        String destinyInstanceandPort = element.getInstance().split("/")[0];
 
-        String path = null;
+        String url = null;
         if(element.getInstance().indexOf('/') == -1) {
-            path = "/";
+            url = "/";
         }
         else {
-            path = element.getInstance().substring(element.getInstance().indexOf("/")+1).trim();
+            url = element.getInstance().substring(element.getInstance().indexOf("/")+1).trim();
+            url = "/" + url;
         }
-        String destinyFunction = element.getMethod() + " -> " + path;
 
         String destinyIp = null;
         try{
             // Get IP given instance name
-            InetAddress addr = InetAddress.getByName(destinyInstance.split(":")[0]);
+            InetAddress addr = InetAddress.getByName(destinyInstanceandPort.split(":")[0]);
             destinyIp = addr.getHostAddress();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        mysqlClient.addEntry(new CleanInfoEntity(element.getStartTime(), element.getEndTime(), element.getEndTime() - element.getStartTime(), element.getRemoteAddr(), destinyMicroservice, destinyInstance, destinyIp, destinyFunction, element.getRemotePort()));
+        mysqlClient.addEntry(new CleanInfoEntity(element.getStartTime(), element.getEndTime(), element.getEndTime() - element.getStartTime(), element.getRemoteAddr(), destinyMicroservice, destinyInstanceandPort.split(":")[0], destinyIp, element.getMethod(), url, element.getRemotePort(), Integer.parseInt(destinyInstanceandPort.split(":")[1]), element.getStatusCode()));
     }
 }
