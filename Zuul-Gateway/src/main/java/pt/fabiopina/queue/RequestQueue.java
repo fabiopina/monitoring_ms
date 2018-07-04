@@ -5,6 +5,7 @@ import pt.fabiopina.entities.CleanInfoEntity;
 import pt.fabiopina.entities.RawInfoEntity;
 
 import java.net.InetAddress;
+import java.sql.Timestamp;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -60,6 +61,6 @@ public class RequestQueue {
             e.printStackTrace();
         }
 
-        mysqlClient.addEntry(new CleanInfoEntity(element.getStartTime(), element.getEndTime(), element.getEndTime() - element.getStartTime(), element.getRemoteAddr(), destinyMicroservice, destinyInstanceandPort.split(":")[0], destinyIp, element.getMethod(), url, element.getRemotePort(), Integer.parseInt(destinyInstanceandPort.split(":")[1]), element.getStatusCode()));
+        mysqlClient.addEntry(new CleanInfoEntity(new Timestamp(element.getStartTime()), new Timestamp(element.getEndTime()), element.getStartTime(), element.getEndTime(), element.getEndTime() - element.getStartTime(), element.getRemoteAddr(), destinyMicroservice, destinyInstanceandPort.split(":")[0], destinyIp, element.getMethod(), url, ""+element.getRemotePort(), destinyInstanceandPort.split(":")[1], ""+element.getStatusCode()));
     }
 }

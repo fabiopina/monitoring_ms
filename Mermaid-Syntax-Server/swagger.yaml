@@ -1,0 +1,31 @@
+swagger: '2.0'
+info:
+  title: Mermaid-Syntax-Server
+  version: "0.1"
+paths:
+  /:
+    get:
+      operationId: application.hello_world
+      summary: "Hello World!"
+      tags: [Mermaid_Syntax_Server]
+      responses:
+        200:
+          description: OK
+  /mermaidsyntax:
+    get:
+      operationId: application.get_mermaid_syntax
+      tags: [Mermaid_Syntax_Server]
+      summary: "Queries MySQL database and returns the result in mermaid syntax"
+      produces:
+      - "text/plain"
+      responses:
+        200:
+          description: "OK."
+        400:
+          description: "Bad request."
+        500:
+          description: "Internal server error."
+
+
+
+
