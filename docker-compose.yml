@@ -3,4 +3,4 @@ services:
   mermaid:
     image: fabiopina151/mermaid-syntax-server:0.1
     ports:
-      - "3001:3001"
+      - "5432:3001"
