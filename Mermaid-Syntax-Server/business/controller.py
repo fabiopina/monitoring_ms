@@ -11,6 +11,13 @@ def get_mermaid_syntax():
     return 'graph LR\nA[Square Rect] -- Link text --> B((Circle))\nA --> C(Round Rect)\nB --> D{Rhombus}\nC --> D\nD --> A'
 
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+
 
 
 
