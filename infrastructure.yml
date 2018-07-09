@@ -72,8 +72,6 @@ services:
       - INFLUXDB_ADMIN_PASSWORD=admin
       - INFLUXDB_USER=user
       - INFLUXDB_USER_PASSWORD=password
-    volumes:
-      - $PWD:/var/lib/influxdb
     networks:
       - my-network
 networks:

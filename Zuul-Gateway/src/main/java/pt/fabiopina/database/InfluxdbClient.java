@@ -55,6 +55,10 @@ public class InfluxdbClient {
                 BatchPoints batchPoints = BatchPoints
                         .database(dbName)
                         .tag("async", "true")
+                        .tag("destiny_microservice", info.getDestinyMicroservice())
+                        .tag("destiny_instance", info.getDestinyInstance())
+                        .tag("method", info.getMethod())
+                        .tag("status_code", info.getStatusCode())
                         .consistency(InfluxDB.ConsistencyLevel.ALL)
                         .build();
 
