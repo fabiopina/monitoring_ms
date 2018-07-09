@@ -1,5 +1,6 @@
 package pt.fabiopina.queue;
 
+import pt.fabiopina.database.InfluxdbClient;
 import pt.fabiopina.database.MysqlClient;
 import pt.fabiopina.entities.CleanInfoEntity;
 import pt.fabiopina.entities.RawInfoEntity;
@@ -12,11 +13,14 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class RequestQueue {
     private BlockingQueue<RawInfoEntity> requestQueue;
     private MysqlClient mysqlClient;
+    private InfluxdbClient influxdbClient;
 
     public RequestQueue() {
         requestQueue = new LinkedBlockingDeque<>();
         mysqlClient = new MysqlClient();
         mysqlClient.createTable();
+        influxdbClient = new InfluxdbClient();
+        influxdbClient.getConnection();
     }
 
     public void add(RawInfoEntity element) {
@@ -61,6 +65,8 @@ public class RequestQueue {
             e.printStackTrace();
         }
 
-        mysqlClient.addEntry(new CleanInfoEntity(new Timestamp(element.getStartTime()), new Timestamp(element.getEndTime()), element.getStartTime(), element.getEndTime(), element.getEndTime() - element.getStartTime(), element.getRemoteAddr(), destinyMicroservice, destinyInstanceandPort.split(":")[0], destinyIp, element.getMethod(), url, ""+element.getRemotePort(), destinyInstanceandPort.split(":")[1], ""+element.getStatusCode()));
+        CleanInfoEntity info = new CleanInfoEntity(new Timestamp(element.getStartTime()), new Timestamp(element.getEndTime()), element.getStartTime(), element.getEndTime(), element.getEndTime() - element.getStartTime(), element.getRemoteAddr(), destinyMicroservice, destinyInstanceandPort.split(":")[0], destinyIp, element.getMethod(), url, ""+element.getRemotePort(), destinyInstanceandPort.split(":")[1], ""+element.getStatusCode());
+        mysqlClient.addEntry(info);
+        influxdbClient.addEntry(info);
     }
 }

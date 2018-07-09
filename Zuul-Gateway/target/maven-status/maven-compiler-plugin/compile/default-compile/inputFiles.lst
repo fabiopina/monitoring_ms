@@ -1,3 +1,4 @@
+/home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/database/InfluxdbClient.java
 /home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/filters/post/InfoRequestFilter.java
 /home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/database/MysqlClient.java
 /home/fpina/monitoring_ms/Zuul-Gateway/src/main/java/pt/fabiopina/entities/RawInfoEntity.java

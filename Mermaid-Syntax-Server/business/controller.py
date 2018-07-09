@@ -8,7 +8,7 @@ def hello_world():
 
 def get_mermaid_syntax():
     #rows = db.get_data()
-    return resp.response_200(message='graph LR\nA[Square Rect] -- Link text --> B((Circle))\nA --> C(Round Rect)\nB --> D{Rhombus}\nC --> D\nD --> A')
+    return 'graph LR\nA[Square Rect] -- Link text --> B((Circle))\nA --> C(Round Rect)\nB --> D{Rhombus}\nC --> D\nD --> A'
 
 
 

@@ -5,4 +5,5 @@ pt/fabiopina/filters/post/InfoRequestFilter.class
 pt/fabiopina/queue/RequestQueue.class
 pt/fabiopina/entities/CleanInfoEntity.class
 pt/fabiopina/entities/RawInfoEntity.class
+pt/fabiopina/database/InfluxdbClient.class
 pt/fabiopina/queue/RequestQueue$1.class
