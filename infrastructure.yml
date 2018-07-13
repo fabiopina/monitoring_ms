@@ -1,8 +1,8 @@
 version: "3"
 services:
   eureka:
-    image: fabiopina151/eureka-server:0.1
-    deploy: 
+    image: fabiopina151/eureka-server:latest
+    deploy:
       restart_policy:
         condition: on-failure
     ports:
@@ -10,19 +10,18 @@ services:
     networks:
       - my-network
   zuul:
-    image: fabiopina151/zuul-gateway:0.1
-    deploy: 
+    image: fabiopina151/zuul-gateway:latest
+    deploy:
       restart_policy:
         condition: on-failure
     ports:
       - "8080:8765"
     environment:
       - EUREKA=eureka:8761
-      - DBADDRESS=mariadb
-      - DBDATABASE=data
-      - DBUSER=user
-      - DBPASSWORD=password
-      - DBTABLE=info
+      - MARIADB_ADDRESS=mariadb
+      - MARIADB_DATABASE=db0
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
       - INFLUXDB_ADDRESS=influxdb
       - INFLUXDB_DB=db0
       - INFLUXDB_USER=user
@@ -30,7 +29,7 @@ services:
     networks:
       - my-network
   registry:
-    image: fabiopina151/service-registry:0.1
+    image: fabiopina151/service-registry:latest
     deploy: 
       mode: global
       restart_policy:
@@ -46,21 +45,21 @@ services:
       - my-network
   mariadb:
     image: mariadb
-    deploy: 
+    deploy:
       restart_policy:
         condition: on-failure
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=data
+      - MYSQL_DATABASE=db0
     networks:
       - my-network
   influxdb:
     image: influxdb
-    deploy: 
+    deploy:
       restart_policy:
         condition: on-failure
     ports:
@@ -74,7 +73,16 @@ services:
       - INFLUXDB_USER_PASSWORD=password
     networks:
       - my-network
+  grafana:
+    image: grafana
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "80:3000"
+    networks:
+      - my-network
 networks:
   my-network:
     external:
-      name: my-network
+      name: teste

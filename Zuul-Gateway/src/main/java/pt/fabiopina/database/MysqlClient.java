@@ -16,10 +16,10 @@ public class MysqlClient {
     public Connection getConnection() {
         if (conn != null) return conn;
 
-        String user = System.getenv("DBUSER");
-        String password = System.getenv("DBPASSWORD");
-        String database = System.getenv("DBDATABASE");
-        String host = System.getenv("DBADDRESS");
+        String user = System.getenv("MARIADB_USER");
+        String password = System.getenv("MARIADB_PASSWORD");
+        String database = System.getenv("MARIADB_DATABASE");
+        String host = System.getenv("MARIADB_ADDRESS");
 
         return getConnection(host, database, user, password);
     }
@@ -48,7 +48,7 @@ public class MysqlClient {
                 if(failed) Thread.sleep(5000);
 
                 Statement stmt = getConnection().createStatement();
-                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + System.getenv("DBTABLE") + " (" +
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS t0 (" +
                         "id INT NOT NULL AUTO_INCREMENT," +
                         "start_date DATETIME(3)," +
                         "end_date DATETIME(3)," +
@@ -81,7 +81,7 @@ public class MysqlClient {
             try {
                 if(failed) Thread.sleep(5000);
 
-                PreparedStatement ps = getConnection().prepareStatement("INSERT INTO " + System.getenv("DBTABLE") + " (start_date, end_date, start_timestamp, end_timestamp, duration, source_ip, source_port, destiny_microservice, destiny_instance, destiny_port, destiny_ip, method, url, status_code) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                PreparedStatement ps = getConnection().prepareStatement("INSERT INTO t0 (start_date, end_date, start_timestamp, end_timestamp, duration, source_ip, source_port, destiny_microservice, destiny_instance, destiny_port, destiny_ip, method, url, status_code) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 ps.setTimestamp(1, info.getStartDate());
                 ps.setTimestamp(2, info.getEndDate());
                 ps.setLong(3, info.getStartTimestamp());

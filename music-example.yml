@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 services:
   ms-db:
     image: mariadb
@@ -11,7 +11,7 @@ services:
     networks:
       - my-network
   users:
-    image: fabiopina151/users-ms:0.1
+    image: fabiopina151/users-ms:latest
     deploy: 
       replicas: 2
       restart_policy:
@@ -23,7 +23,7 @@ services:
     networks:
       - my-network
   songs:
-    image: fabiopina151/songs-ms:0.1
+    image: fabiopina151/songs-ms:latest
     deploy: 
       replicas: 2
       restart_policy:
@@ -35,7 +35,7 @@ services:
     networks:
       - my-network
   playlists:
-    image: fabiopina151/playlists-ms:0.1
+    image: fabiopina151/playlists-ms:latest
     deploy: 
       replicas: 2
       restart_policy:
@@ -48,7 +48,7 @@ services:
     networks:
       - my-network
   auth:
-    image: fabiopina151/auth-ms:0.1
+    image: fabiopina151/auth-ms:latest
     deploy: 
       replicas: 2
       restart_policy:
@@ -60,7 +60,7 @@ services:
     networks:
       - my-network
   aggr:
-    image: fabiopina151/aggr-ms:0.1
+    image: fabiopina151/aggr-ms:latest
     deploy: 
       replicas: 2
       restart_policy:
