@@ -82,7 +82,18 @@ services:
       - "80:3000"
     networks:
       - my-network
+  chord:
+    image: jaimelive/chord_service:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      - DBADDRESS=mariadb
+      - DBDATABASE=db0
+      - DBTABLE=t0
+      - DBUSER=user
+      - DBPASSWORD=password
 networks:
   my-network:
     external:
-      name: teste
+      name: my-network

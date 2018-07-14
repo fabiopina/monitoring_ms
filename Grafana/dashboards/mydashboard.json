@@ -2,7 +2,6 @@
   "annotations": {
     "list": [
       {
-        "$$hashKey": "object:209",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -16,9 +15,25 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1531500991186,
+  "iteration": 1531602733456,
   "links": [],
   "panels": [
+    {
+      "content": "\n<div id=\"target\">lol</div>\n<style>\n    #target {\n        position: relative;\n        width: 100%;\n        height: 100%;\n        display: inline-block;\n    }\n    #target > svg {\n        display: inline-block;\n        width: 100%;\n        height: 100%;\n    }\n</style>\n\n<script type=\"application/javascript\">\nfunction getChord() {\n    chordServiceURL = \"http://chord:5000/\";\n    target = document.getElementById('target');\n    xhr = new XMLHttpRequest();\n    xhr.onload = function() {\n        if(xhr.status === 200) {\n            console.log(xhr.response);\n            target.innerHTML = xhr.response;\n        }\n    };\n\n    xhr.open('POST', chordServiceURL, true);\n    xhr.send(\"$microservice\");\n  \n}\ngetChord();\n</script>",
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 21,
+      "links": [],
+      "mode": "html",
+      "title": "Chord",
+      "transparent": false,
+      "type": "text"
+    },
     {
       "cacheTimeout": null,
       "colorBackground": false,
@@ -41,7 +56,7 @@
         "h": 3,
         "w": 3,
         "x": 0,
-        "y": 0
+        "y": 9
       },
       "id": 16,
       "interval": null,
@@ -80,7 +95,6 @@
       "tableColumn": "",
       "targets": [
         {
-          "$$hashKey": "object:669",
           "alias": "",
           "format": "time_series",
           "rawSql": "SELECT\n  UNIX_TIMESTAMP(start_date) as time_sec,\n  COUNT(DISTINCT(destiny_microservice)) as value,\n  'teste' as metric\nFROM t0\nWHERE $__timeFilter(start_date)\n",
@@ -122,7 +136,7 @@
         "h": 3,
         "w": 3,
         "x": 3,
-        "y": 0
+        "y": 9
       },
       "id": 17,
       "interval": null,
@@ -161,7 +175,6 @@
       "tableColumn": "",
       "targets": [
         {
-          "$$hashKey": "object:704",
           "alias": "",
           "format": "time_series",
           "rawSql": "SELECT\n  UNIX_TIMESTAMP(start_date) as time_sec,\n  COUNT(DISTINCT(destiny_instance)) as value,\n  'teste' as metric\nFROM t0\nWHERE $__timeFilter(start_date)\n",
@@ -193,7 +206,7 @@
         "h": 7,
         "w": 18,
         "x": 6,
-        "y": 0
+        "y": 9
       },
       "id": 19,
       "legend": {
@@ -221,7 +234,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "$$hashKey": "object:747",
           "alias": "",
           "format": "time_series",
           "groupBy": [
@@ -333,7 +345,7 @@
         "h": 11,
         "w": 6,
         "x": 0,
-        "y": 3
+        "y": 12
       },
       "id": 13,
       "links": [],
@@ -368,7 +380,6 @@
       ],
       "targets": [
         {
-          "$$hashKey": "object:850",
           "alias": "",
           "format": "table",
           "rawSql": "SELECT\n  destiny_ip as 'Ip address',\n  destiny_instance as 'Instance',\n  destiny_port as 'Port',\n  destiny_microservice as 'Microservice'\nFROM t0\nWHERE $__timeFilter(start_date)\nGROUP BY destiny_ip",
@@ -400,7 +411,7 @@
         "h": 7,
         "w": 18,
         "x": 6,
-        "y": 7
+        "y": 16
       },
       "heatmap": {},
       "highlightCards": true,
@@ -411,7 +422,6 @@
       "links": [],
       "targets": [
         {
-          "$$hashKey": "object:903",
           "alias": "",
           "format": "time_series",
           "groupBy": [
@@ -511,7 +521,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 23
       },
       "id": 6,
       "legend": {
@@ -537,7 +547,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "$$hashKey": "object:1022",
           "alias": "",
           "format": "time_series",
           "groupBy": [
@@ -653,8 +662,11 @@
       {
         "allValue": "",
         "current": {
-          "text": "All",
-          "value": "$__all"
+          "text": "music-aggr + music-auth",
+          "value": [
+            "music-aggr",
+            "music-auth"
+          ]
         },
         "datasource": "InfluxDB",
         "hide": 0,
