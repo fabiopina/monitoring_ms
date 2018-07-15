@@ -1,4 +1,4 @@
-[Imgur](https://i.imgur.com/knWC5eD.png)
+![alt text](https://i.imgur.com/knWC5eD.png "Logo Title Text 1")
 How to use
 ======
 ### Prerequisites
