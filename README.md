@@ -1,4 +1,4 @@
-Nonintrusive Monitoring of Microservice Architectures
+Nonintrusive Monitoring of Microservice-based Architectures
 ======
 ![alt text](https://i.imgur.com/knWC5eD.png "Logo Title Text 1")
 How to use
@@ -79,7 +79,7 @@ Your services must be containerized in order to be deployed. To be recognized by
 
 To deploy your services you must create a docker-compose file and run the command:
 ```
-docker stack deploy -c music-example.yml music
+$ docker stack deploy -c music-example.yml music
 ```
 `music-example.yml` should be your docker-compose file and `music` should be a namespace of your choice.
 Take a look at a docker-compose file example: 
@@ -156,8 +156,10 @@ networks:
     external:
       name: my-network
 ```
-Note that the auth service picks up the users address using: `zuul:8765/music-users`
-
+Note that the auth service picks up the users address using: `zuul:8765/music-users`. If you wish to stop the application run: 
+```
+$ docker stack rm music
+```
 An application example source code and docker-compose file can be found at: [https://github.com/fabiopina/music_ms ](https://github.com/fabiopina/music_ms )
 
 
