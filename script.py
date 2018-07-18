@@ -1,14 +1,19 @@
 current = None
 
 info = {'network': 'my-network',
+        'eureka_expose': False,
         'eureka_expose_port': 8761,
+        'zuul_expose': False,
         'zuul_expose_port': 8765,
+        'grafana_expose': False,
         'grafana_expose_port': 3000,
+        'mariadb_expose': False,
         'mariadb_expose_port': 3306,
         'mariadb_root_password': 'root',
         'mariadb_user': 'user',
         'mariadb_user_password': 'password',
         'mariadb_database': 'db0',
+        'influxdb_expose': False,
         'influxdb_expose_port': 8086,
         'influxdb_admin_user': 'admin',
         'influxdb_admin_password': 'admin',
@@ -35,10 +40,12 @@ try:
                 current = 'mariadb'
             elif line.split(':')[0] == 'influx_db':
                 current = 'influxdb'
+            elif line.split(':')[0] == 'expose':
+                if line.split(':')[1] == 'true':
+                    info[''.join([current, '_expose'])] = True
             else:
                 if line.split(':')[1] != '':
                     info[''.join([current, '_', line.split(':')[0]])] = line.split(':')[1]
-
 
 except Exception:
     print("config.yaml not found! Loading default config...")
@@ -51,19 +58,21 @@ with open('infrastructure.yml', 'w') as infra:
                 '    image: fabiopina151/eureka-server:latest\n'
                 '    deploy:\n'
                 '      restart_policy:\n'
-                '        condition: on-failure\n'
-                '    ports:\n'
-                '      - \"' + info['eureka_expose_port'] + ':8761\"\n'
-                '    networks:\n'
+                '        condition: on-failure\n')
+    if info['eureka_expose'] == True:
+        infra.write('    ports:\n'
+                    '      - \"' + info['eureka_expose_port'] + ':8761\"\n')
+    infra.write('    networks:\n'
                 '      - my-network\n'
                 '  zuul:\n'
                 '    image: fabiopina151/zuul-gateway:latest\n'
                 '    deploy:\n'
                 '      restart_policy:\n'
-                '        condition: on-failure\n'
-                '    ports:\n'
-                '      - \"' + info['zuul_expose_port'] + ':8765\"\n'
-                '    environment:\n'
+                '        condition: on-failure\n')
+    if info['zuul_expose'] == True:
+        infra.write('    ports:\n'
+                    '      - \"' + info['zuul_expose_port'] + ':8765\"\n')
+    infra.write('    environment:\n'
                 '      - EUREKA=eureka:8761\n'
                 '      - MARIADB_ADDRESS=mariadb\n'
                 '      - MARIADB_DATABASE=' + info['mariadb_database'] + '\n'
@@ -94,10 +103,11 @@ with open('infrastructure.yml', 'w') as infra:
                 '    image: mariadb\n'
                 '    deploy:\n'
                 '      restart_policy:\n'
-                '        condition: on-failure\n'
-                '    ports:\n'
-                '      - \"' + info['mariadb_expose_port'] + ':3306\"\n'
-                '    environment:\n'
+                '        condition: on-failure\n')
+    if info['mariadb_expose'] == True:
+        infra.write('    ports:\n'
+                    '      - \"' + info['mariadb_expose_port'] + ':3306\"\n')
+    infra.write('    environment:\n'
                 '      - MYSQL_ROOT_PASSWORD=' + info['mariadb_root_password'] + '\n'
                 '      - MYSQL_USER=' + info['mariadb_user'] + '\n'
                 '      - MYSQL_PASSWORD=' + info['mariadb_user_password'] + '\n'
@@ -108,10 +118,11 @@ with open('infrastructure.yml', 'w') as infra:
                 '    image: influxdb\n'
                 '    deploy:\n'
                 '      restart_policy:\n'
-                '        condition: on-failure\n'
-                '    ports:\n'
-                '      - \"' + info['influxdb_expose_port'] + ':8086\"\n'
-                '    environment:\n'
+                '        condition: on-failure\n')
+    if info['influxdb_expose'] == True:
+        infra.write('    ports:\n'
+                    '      - \"' + info['influxdb_expose_port'] + ':8086\"\n')
+    infra.write('    environment:\n'
                 '      - INFLUXDB_DB=' + info['influxdb_database'] + '\n'
                 '      - INFLUXDB_ADMIN_ENABLED=true\n'
                 '      - INFLUXDB_ADMIN_USER=' + info['influxdb_admin_user'] + '\n'
@@ -124,10 +135,11 @@ with open('infrastructure.yml', 'w') as infra:
                 '    image: grafana\n'
                 '    deploy:\n'
                 '      restart_policy:\n'
-                '        condition: on-failure\n'
-                '    ports:\n'
-                '      - \"' + info['grafana_expose_port'] + ':3000\"\n'
-                '    networks:\n'
+                '        condition: on-failure\n')
+    if info['grafana_expose'] == True:
+        infra.write('    ports:\n'
+                    '      - \"' + info['grafana_expose_port'] + ':3000\"\n')
+    infra.write('    networks:\n'
                 '      - my-network\n'
                 '  chord:\n'
                 '    image: jaimelive/chord_service:latest\n'

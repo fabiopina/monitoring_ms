@@ -1,17 +1,22 @@
 network: my-network
 eureka:
+  expose: true
 	expose_port: 8761
 zuul:
+  expose: true
 	expose_port: 8080
 grafana:
+  expose: true
 	expose_port: 80
 maria_db:
+  expose: true
 	expose_port: 3306
 	root_password: root
 	user: user
 	user_password: password
 	database: db0
 influx_db:
+  expose: true
 	expose_port: 8086
 	admin_user: admin
 	admin_password: admin
