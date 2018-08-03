@@ -1,4 +1,66 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_MYSQL",
+      "label": "MySQL",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "mysql",
+      "pluginName": "MySQL"
+    },
+    {
+      "name": "DS_INFLUXDB",
+      "label": "InfluxDB",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "5.1.5"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "heatmap",
+      "name": "Heatmap",
+      "version": "5.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "5.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "mysql",
+      "name": "MySQL",
+      "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "singlestat",
+      "name": "Singlestat",
+      "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": "5.0.0"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -15,25 +77,10 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1531602733456,
+  "id": null,
+  "iteration": 1533314162654,
   "links": [],
   "panels": [
-    {
-      "content": "\n<div id=\"target\">lol</div>\n<style>\n    #target {\n        position: relative;\n        width: 100%;\n        height: 100%;\n        display: inline-block;\n    }\n    #target > svg {\n        display: inline-block;\n        width: 100%;\n        height: 100%;\n    }\n</style>\n\n<script type=\"application/javascript\">\nfunction getChord() {\n    chordServiceURL = \"http://chord:5000/\";\n    target = document.getElementById('target');\n    xhr = new XMLHttpRequest();\n    xhr.onload = function() {\n        if(xhr.status === 200) {\n            console.log(xhr.response);\n            target.innerHTML = xhr.response;\n        }\n    };\n\n    xhr.open('POST', chordServiceURL, true);\n    xhr.send(\"$microservice\");\n  \n}\ngetChord();\n</script>",
-      "description": "",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
-      "id": 21,
-      "links": [],
-      "mode": "html",
-      "title": "Chord",
-      "transparent": false,
-      "type": "text"
-    },
     {
       "cacheTimeout": null,
       "colorBackground": false,
@@ -43,7 +90,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "MySQL",
+      "datasource": "${DS_MYSQL}",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -56,7 +103,7 @@
         "h": 3,
         "w": 3,
         "x": 0,
-        "y": 9
+        "y": 0
       },
       "id": 16,
       "interval": null,
@@ -123,7 +170,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "MySQL",
+      "datasource": "${DS_MYSQL}",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -136,7 +183,7 @@
         "h": 3,
         "w": 3,
         "x": 3,
-        "y": 9
+        "y": 0
       },
       "id": 17,
       "interval": null,
@@ -199,14 +246,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "InfluxDB",
+      "datasource": "${DS_INFLUXDB}",
       "description": "Number of requests per unit of time",
       "fill": 1,
       "gridPos": {
-        "h": 7,
-        "w": 18,
+        "h": 6,
+        "w": 12,
         "x": 6,
-        "y": 9
+        "y": 0
       },
       "id": 19,
       "legend": {
@@ -338,190 +385,18 @@
       }
     },
     {
-      "columns": [],
-      "datasource": "MySQL",
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 11,
-        "w": 6,
-        "x": 0,
-        "y": 12
-      },
-      "id": 13,
-      "links": [],
-      "pageSize": null,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": null,
-        "desc": false
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "alias": "",
-          "format": "table",
-          "rawSql": "SELECT\n  destiny_ip as 'Ip address',\n  destiny_instance as 'Instance',\n  destiny_port as 'Port',\n  destiny_microservice as 'Microservice'\nFROM t0\nWHERE $__timeFilter(start_date)\nGROUP BY destiny_ip",
-          "refId": "A"
-        }
-      ],
-      "title": "Services Information",
-      "transform": "table",
-      "type": "table"
-    },
-    {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
-      "color": {
-        "cardColor": "#c15c17",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateYlOrRd",
-        "exponent": 0.5,
-        "max": null,
-        "min": null,
-        "mode": "spectrum"
-      },
-      "dataFormat": "timeseries",
-      "datasource": "InfluxDB",
-      "description": "Each column represents an histogram of request duration for that period of time. Darker tones of red means more requests for that slot",
-      "gridPos": {
-        "h": 7,
-        "w": 18,
-        "x": 6,
-        "y": 16
-      },
-      "heatmap": {},
-      "highlightCards": true,
-      "id": 10,
-      "legend": {
-        "show": true
-      },
-      "links": [],
-      "targets": [
-        {
-          "alias": "",
-          "format": "time_series",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "request",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "rawSql": "SELECT\n  UNIX_TIMESTAMP(start_date) as time_sec,\n  duration as value,\n  $scope as metric\nFROM info\nWHERE destiny_microservice LIKE $microservice\nAND destiny_instance LIKE $instance\nAND $__timeFilter(start_date)\n",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "duration"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "destiny_microservice",
-              "operator": "=~",
-              "value": "/^$microservice$/"
-            },
-            {
-              "condition": "AND",
-              "key": "destiny_instance",
-              "operator": "=~",
-              "value": "/^$instance$/"
-            },
-            {
-              "condition": "AND",
-              "key": "method",
-              "operator": "=~",
-              "value": "/^$method$/"
-            },
-            {
-              "condition": "AND",
-              "key": "status_code",
-              "operator": "=~",
-              "value": "/^$code$/"
-            }
-          ]
-        }
-      ],
-      "title": "Request Heatmap",
-      "tooltip": {
-        "show": true,
-        "showHistogram": false
-      },
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "xBucketNumber": null,
-      "xBucketSize": null,
-      "yAxis": {
-        "decimals": null,
-        "format": "ms",
-        "logBase": 1,
-        "max": null,
-        "min": null,
-        "show": true,
-        "splitFactor": null
-      },
-      "yBucketBound": "auto",
-      "yBucketNumber": null,
-      "yBucketSize": null
-    },
-    {
       "aliasColors": {},
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "InfluxDB",
+      "datasource": "${DS_INFLUXDB}",
       "description": "Distribution for the request duration",
       "fill": 1,
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 23
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 0
       },
       "id": 6,
       "legend": {
@@ -651,6 +526,178 @@
         "align": false,
         "alignLevel": 20
       }
+    },
+    {
+      "columns": [],
+      "datasource": "${DS_MYSQL}",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 0,
+        "y": 3
+      },
+      "id": 13,
+      "links": [],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "format": "table",
+          "rawSql": "SELECT\n  destiny_ip as 'Ip address',\n  destiny_instance as 'Instance',\n  destiny_port as 'Port',\n  destiny_microservice as 'Microservice'\nFROM t0\nWHERE $__timeFilter(start_date)\nGROUP BY destiny_ip",
+          "refId": "A"
+        }
+      ],
+      "title": "Services Information",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#c15c17",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateYlOrRd",
+        "exponent": 0.5,
+        "max": null,
+        "min": null,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "${DS_INFLUXDB}",
+      "description": "Each column represents an histogram of request duration for that period of time. Darker tones of red means more requests for that slot",
+      "gridPos": {
+        "h": 7,
+        "w": 18,
+        "x": 6,
+        "y": 6
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 10,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "request",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(start_date) as time_sec,\n  duration as value,\n  $scope as metric\nFROM info\nWHERE destiny_microservice LIKE $microservice\nAND destiny_instance LIKE $instance\nAND $__timeFilter(start_date)\n",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "duration"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "destiny_microservice",
+              "operator": "=~",
+              "value": "/^$microservice$/"
+            },
+            {
+              "condition": "AND",
+              "key": "destiny_instance",
+              "operator": "=~",
+              "value": "/^$instance$/"
+            },
+            {
+              "condition": "AND",
+              "key": "method",
+              "operator": "=~",
+              "value": "/^$method$/"
+            },
+            {
+              "condition": "AND",
+              "key": "status_code",
+              "operator": "=~",
+              "value": "/^$code$/"
+            }
+          ]
+        }
+      ],
+      "title": "Request Heatmap",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
     }
   ],
   "refresh": false,
@@ -661,14 +708,8 @@
     "list": [
       {
         "allValue": "",
-        "current": {
-          "text": "music-aggr + music-auth",
-          "value": [
-            "music-aggr",
-            "music-auth"
-          ]
-        },
-        "datasource": "InfluxDB",
+        "current": {},
+        "datasource": "${DS_INFLUXDB}",
         "hide": 0,
         "includeAll": true,
         "label": "Microservice Name",
@@ -687,11 +728,8 @@
       },
       {
         "allValue": "",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "InfluxDB",
+        "current": {},
+        "datasource": "${DS_INFLUXDB}",
         "hide": 0,
         "includeAll": true,
         "label": "Instance Name",
@@ -710,11 +748,8 @@
       },
       {
         "allValue": "",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "InfluxDB",
+        "current": {},
+        "datasource": "${DS_INFLUXDB}",
         "hide": 0,
         "includeAll": true,
         "label": "Method",
@@ -733,11 +768,8 @@
       },
       {
         "allValue": "",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "InfluxDB",
+        "current": {},
+        "datasource": "${DS_INFLUXDB}",
         "hide": 0,
         "includeAll": true,
         "label": "Status Code",
