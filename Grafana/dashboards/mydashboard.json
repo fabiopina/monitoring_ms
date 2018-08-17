@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "name": "DS_MYSQL",
+      "name": "MySQL",
       "label": "MySQL",
       "description": "",
       "type": "datasource",
@@ -9,7 +9,7 @@
       "pluginName": "MySQL"
     },
     {
-      "name": "DS_INFLUXDB",
+      "name": "InfluxDB",
       "label": "InfluxDB",
       "description": "",
       "type": "datasource",
@@ -78,7 +78,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1533314162654,
+  "iteration": 1534517750371,
   "links": [],
   "panels": [
     {
@@ -90,7 +90,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "${DS_MYSQL}",
+      "datasource": "MySQL",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -170,7 +170,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "${DS_MYSQL}",
+      "datasource": "MySQL",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -246,7 +246,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB}",
+      "datasource": "InfluxDB",
       "description": "Number of requests per unit of time",
       "fill": 1,
       "gridPos": {
@@ -389,7 +389,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB}",
+      "datasource": "InfluxDB",
       "description": "Distribution for the request duration",
       "fill": 1,
       "gridPos": {
@@ -529,7 +529,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_MYSQL}",
+      "datasource": "MySQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 10,
@@ -572,8 +572,40 @@
         {
           "alias": "",
           "format": "table",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
           "rawSql": "SELECT\n  destiny_ip as 'Ip address',\n  destiny_instance as 'Instance',\n  destiny_port as 'Port',\n  destiny_microservice as 'Microservice'\nFROM t0\nWHERE $__timeFilter(start_date)\nGROUP BY destiny_ip",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Services Information",
@@ -595,7 +627,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "timeseries",
-      "datasource": "${DS_INFLUXDB}",
+      "datasource": "InfluxDB",
       "description": "Each column represents an histogram of request duration for that period of time. Darker tones of red means more requests for that slot",
       "gridPos": {
         "h": 7,
@@ -709,7 +741,7 @@
       {
         "allValue": "",
         "current": {},
-        "datasource": "${DS_INFLUXDB}",
+        "datasource": "InfluxDB",
         "hide": 0,
         "includeAll": true,
         "label": "Microservice Name",
@@ -729,7 +761,7 @@
       {
         "allValue": "",
         "current": {},
-        "datasource": "${DS_INFLUXDB}",
+        "datasource": "InfluxDB",
         "hide": 0,
         "includeAll": true,
         "label": "Instance Name",
@@ -749,7 +781,7 @@
       {
         "allValue": "",
         "current": {},
-        "datasource": "${DS_INFLUXDB}",
+        "datasource": "InfluxDB",
         "hide": 0,
         "includeAll": true,
         "label": "Method",
@@ -769,7 +801,7 @@
       {
         "allValue": "",
         "current": {},
-        "datasource": "${DS_INFLUXDB}",
+        "datasource": "InfluxDB",
         "hide": 0,
         "includeAll": true,
         "label": "Status Code",
