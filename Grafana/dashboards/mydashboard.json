@@ -78,7 +78,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1534517750371,
+  "iteration": 1534705347433,
   "links": [],
   "panels": [
     {
@@ -631,7 +631,7 @@
       "description": "Each column represents an histogram of request duration for that period of time. Darker tones of red means more requests for that slot",
       "gridPos": {
         "h": 7,
-        "w": 18,
+        "w": 15,
         "x": 6,
         "y": 6
       },
@@ -730,6 +730,150 @@
       "yBucketBound": "auto",
       "yBucketNumber": null,
       "yBucketSize": null
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
+      "fill": 1,
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 21,
+        "y": 6
+      },
+      "id": 21,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "request",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(start_date) as time_sec,\n  AVG(duration) as value,\n  destiny_microservice as metric\nFROM t0\nWHERE $__timeFilter(start_date)\nGROUP BY destiny_microservice\n\n\n",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "duration"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "destiny_microservice",
+              "operator": "=~",
+              "value": "/^$microservice$/"
+            },
+            {
+              "condition": "AND",
+              "key": "destiny_instance",
+              "operator": "=~",
+              "value": "/^$instance$/"
+            },
+            {
+              "condition": "AND",
+              "key": "method",
+              "operator": "=~",
+              "value": "/^$method$/"
+            },
+            {
+              "condition": "AND",
+              "key": "status_code",
+              "operator": "=~",
+              "value": "/^$code$/"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Request Time Average",
+      "tooltip": {
+        "shared": false,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "series",
+        "name": null,
+        "show": true,
+        "values": [
+          "total"
+        ]
+      },
+      "yaxes": [
+        {
+          "format": "µs",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": false,
@@ -821,7 +965,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {
